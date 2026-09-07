@@ -351,13 +351,29 @@ body{font-family:Inter,sans-serif;background:#0a0e13;color:#e2e8f0}
 </div>
 
 <div class="glass rounded-2xl p-5">
-<h3 class="font-bold mono mb-3">MES POSTES 3x8</h3>
-<div id="listPostes" class="space-y-2"></div>
-<div class="mt-3 grid grid-cols-4 gap-2">
-<input id="newPosteNom" placeholder="Nom" class="bg-white/10 rounded-lg p-2 text-xs mono">
+<h3 class="font-bold mono mb-3">MES HORAIRES</h3>
+<div id="listPostes" class="space-y-3"></div>
+<div class="mt-5 p-3 rounded-xl bg-white/5 border border-white/10">
+<h4 class="text-[11px] mono font-bold mb-2 tracking-widest text-white/60">NOUVEL HORAIRE</h4>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+<input id="newPosteNom" placeholder="Nom (ex: Matin)" class="bg-white/10 rounded-lg p-2 text-xs mono">
 <input id="newPosteDebut" type="time" value="06:00" class="bg-white/10 rounded-lg p-2 text-xs mono">
 <input id="newPosteFin" type="time" value="14:00" class="bg-white/10 rounded-lg p-2 text-xs mono">
-<button id="addPoste" class="bg-cyan-500 text-black rounded-lg font-bold text-xs">AJOUTER</button>
+<select id="newPosteCouleur" class="bg-white/10 rounded-lg p-2 text-xs mono">
+<option value="bg-blue-500/30 border-blue-500/50 text-blue-300">🔵 Bleu</option>
+<option value="bg-orange-500/30 border-orange-500/50 text-orange-300">🟠 Orange</option>
+<option value="bg-purple-500/30 border-purple-500/50 text-purple-300">🟣 Violet</option>
+<option value="bg-emerald-500/30 border-emerald-500/50 text-emerald-300">🟢 Vert</option>
+<option value="bg-red-500/30 border-red-500/50 text-red-300">🔴 Rouge</option>
+<option value="bg-cyan-500/30 border-cyan-500/50 text-cyan-300">💠 Cyan</option>
+<option value="bg-yellow-500/30 border-yellow-500/50 text-yellow-300">🟡 Jaune</option>
+<option value="bg-white/10 border-white/20 text-white/60">⚪ Gris</option>
+</select>
+</div>
+<div class="mt-3 flex gap-2 items-center">
+<div id="newPostePreview" class="flex-1 h-9 rounded-xl border flex items-center justify-center text-[10px] mono font-bold bg-blue-500/30 border-blue-500/50 text-blue-300">Aperçu: M - Matin 06:00-14:00</div>
+<button id="addPoste" class="px-6 h-9 bg-cyan-500 text-black rounded-xl font-bold text-xs hover:bg-cyan-400">AJOUTER</button>
+</div>
 </div>
 </div>
 
@@ -950,29 +966,148 @@ const overStop=document.querySelector('#overlayStopSound'); if(overStop) overSto
 // Postes & Cycle
 function renderReglagesBase(){
 updateObjDisplay(); updatePauseDisplay();
-$('#cycleStart').value=data.cycleStart;
+const csEl=document.querySelector('#cycleStart'); if(csEl) csEl.value=data.cycleStart;
 let html='';
 data.postes.forEach(p=>{
-html+=`<div class="flex justify-between items-center p-2 rounded-xl ${p.couleur} border"><span class="font-bold mono text-xs">${p.id} - ${p.nom} ${p.debut? fmtHM(p.debut)+'-'+fmtHM(p.fin):''}</span><button class="delPoste text-xs" data-id="${p.id}">✕</button></div>`;
+  const safeCouleur = p.couleur || 'bg-white/10 border-white/20 text-white/60';
+  html+=`<div class="rounded-xl border ${safeCouleur} p-2">
+    <div class="flex justify-between items-center">
+      <div class="flex items-center gap-2">
+        <span class="w-7 h-7 rounded-full bg-black/30 flex items-center justify-center font-bold mono text-xs">${p.id}</span>
+        <div class="flex flex-col">
+          <span class="font-bold mono text-xs leading-none">${p.nom}</span>
+          <span class="text-[10px] mono opacity-70">${p.debut || p.debut===0 ? fmtHM(p.debut)+' - '+fmtHM(p.fin) : ''}</span>
+        </div>
+      </div>
+      <div class="flex gap-1">
+        <button class="editPoste w-7 h-7 rounded-full bg-white/10 border border-white/10 text-[11px] hover:bg-white/20" data-id="${p.id}" title="Modifier">✏️</button>
+        <button class="delPoste w-7 h-7 rounded-full bg-red-500/15 border border-red-500/30 text-red-300 text-[11px] hover:bg-red-500/30" data-id="${p.id}" title="Supprimer">✕</button>
+      </div>
+    </div>
+    <div id="editForm-${p.id}" class="hidden mt-3 p-3 rounded-xl bg-black/20 border border-white/10 space-y-2">
+      <div class="grid grid-cols-4 gap-2">
+        <input id="editNom-${p.id}" value="${p.nom}" class="bg-white/10 rounded-lg p-2 text-xs mono" placeholder="Nom">
+        <input id="editDebut-${p.id}" type="time" value="${fmtHM(p.debut)}" class="bg-white/10 rounded-lg p-2 text-xs mono">
+        <input id="editFin-${p.id}" type="time" value="${fmtHM(p.fin)}" class="bg-white/10 rounded-lg p-2 text-xs mono">
+        <select id="editCouleur-${p.id}" class="bg-white/10 rounded-lg p-2 text-xs mono col-span-1">
+          <option value="bg-blue-500/30 border-blue-500/50 text-blue-300" ${safeCouleur.includes('blue')?'selected':''}>🔵 Bleu</option>
+          <option value="bg-orange-500/30 border-orange-500/50 text-orange-300" ${safeCouleur.includes('orange')?'selected':''}>🟠 Orange</option>
+          <option value="bg-purple-500/30 border-purple-500/50 text-purple-300" ${safeCouleur.includes('purple')?'selected':''}>🟣 Violet</option>
+          <option value="bg-emerald-500/30 border-emerald-500/50 text-emerald-300" ${safeCouleur.includes('emerald')?'selected':''}>🟢 Vert</option>
+          <option value="bg-red-500/30 border-red-500/50 text-red-300" ${safeCouleur.includes('red')?'selected':''}>🔴 Rouge</option>
+          <option value="bg-cyan-500/30 border-cyan-500/50 text-cyan-300" ${safeCouleur.includes('cyan')?'selected':''}>💠 Cyan</option>
+          <option value="bg-yellow-500/30 border-yellow-500/50 text-yellow-300" ${safeCouleur.includes('yellow')?'selected':''}>🟡 Jaune</option>
+          <option value="bg-white/10 border-white/20 text-white/60" ${safeCouleur.includes('white/10')?'selected':''}>⚪ Gris</option>
+        </select>
+      </div>
+      <div class="flex gap-2 mt-2">
+        <button class="saveEditPoste flex-1 py-2 rounded-xl bg-cyan-500 text-black font-bold text-xs" data-id="${p.id}">💾 ENREGISTRER</button>
+        <button class="cancelEditPoste px-4 py-2 rounded-xl bg-white/10 text-xs" data-id="${p.id}">Annuler</button>
+      </div>
+    </div>
+  </div>`;
 });
-$('#listPostes').innerHTML=html;
-$$('.delPoste').forEach(b=>b.addEventListener('click',()=>{ data.postes=data.postes.filter(x=>x.id!==b.dataset.id); save(); renderReglages(); }));
+const listEl=document.querySelector('#listPostes');
+if(listEl) listEl.innerHTML=html || '<div class="text-xs text-white/40 mono p-3">Aucun horaire créé</div>';
+
+document.querySelectorAll('.delPoste').forEach(b=>b.addEventListener('click',()=>{
+  const id=b.dataset.id;
+  if(confirm('Supprimer l\'horaire '+id+' ?')){
+    data.postes=data.postes.filter(x=>x.id!==id);
+    data.cycle=data.cycle.filter(c=>c!==id);
+    save(); renderReglages(); renderPlanning();
+  }
+}));
+document.querySelectorAll('.editPoste').forEach(b=>b.addEventListener('click',()=>{
+  const id=b.dataset.id;
+  const form=document.querySelector('#editForm-'+id);
+  if(form) form.classList.toggle('hidden');
+}));
+document.querySelectorAll('.cancelEditPoste').forEach(b=>b.addEventListener('click',()=>{
+  const id=b.dataset.id;
+  const form=document.querySelector('#editForm-'+id);
+  if(form) form.classList.add('hidden');
+}));
+document.querySelectorAll('.saveEditPoste').forEach(b=>b.addEventListener('click',()=>{
+  const id=b.dataset.id;
+  const idx=data.postes.findIndex(x=>x.id===id);
+  if(idx===-1) return;
+  const nomEl=document.querySelector('#editNom-'+id);
+  const debutEl=document.querySelector('#editDebut-'+id);
+  const finEl=document.querySelector('#editFin-'+id);
+  const couleurEl=document.querySelector('#editCouleur-'+id);
+  const newNom = nomEl ? nomEl.value.trim() || data.postes[idx].nom : data.postes[idx].nom;
+  const newDebut = debutEl ? parseHM(debutEl.value) : data.postes[idx].debut;
+  const newFin = finEl ? parseHM(finEl.value) : data.postes[idx].fin;
+  const newCouleur = couleurEl ? couleurEl.value : data.postes[idx].couleur;
+  // Si le nom change, on garde le même ID pour ne pas casser le cycle, mais on permet changement de lettre via première lettre ?
+  // On garde ID existant
+  data.postes[idx].nom = newNom;
+  data.postes[idx].debut = newDebut;
+  data.postes[idx].fin = newFin;
+  data.postes[idx].couleur = newCouleur;
+  save(); renderReglages(); renderPlanning(); renderHeader();
+}));
+
 let cHtml='';
-data.cycle.forEach((id,i)=>{ const poste=data.postes.find(x=>x.id===id); const col=poste?poste.couleur:'bg-white/10'; cHtml+=`<span class="px-2 py-1 rounded-full text-xs font-bold mono border ${col}">${id}</span>`; });
-$('#cycleDisplay').innerHTML=cHtml||'<span class="text-xs text-white/40">Aucun cycle</span>';
+data.cycle.forEach((id,i)=>{ const poste=data.postes.find(x=>x.id===id); const col=poste?poste.couleur:'bg-white/10 border-white/20'; cHtml+=`<span class="px-2 py-1 rounded-full text-xs font-bold mono border ${col}">${id}</span>`; });
+const cycleDisplayEl=document.querySelector('#cycleDisplay');
+if(cycleDisplayEl) cycleDisplayEl.innerHTML=cHtml||'<span class="text-xs text-white/40">Aucun cycle - ajoute des horaires</span>';
 let btns='';
-data.postes.forEach(p=>{ btns+=`<button class="addCycle px-3 py-1 rounded-full bg-white/10 text-xs mono font-bold" data-id="${p.id}">${p.id}</button>`; });
-$('#cycleButtons').innerHTML=btns;
-$$('.addCycle').forEach(b=>b.addEventListener('click',()=>{ data.cycle.push(b.dataset.id); save(); renderReglages(); }));
+data.postes.forEach(p=>{ btns+=`<button class="addCycle px-3 py-1 rounded-full bg-white/10 text-xs mono font-bold border ${p.couleur}" data-id="${p.id}">${p.id}</button>`; });
+const cycleBtnsEl=document.querySelector('#cycleButtons');
+if(cycleBtnsEl) cycleBtnsEl.innerHTML=btns;
+document.querySelectorAll('.addCycle').forEach(b=>b.addEventListener('click',()=>{ data.cycle.push(b.dataset.id); save(); renderReglages(); }));
 }
-$('#addPoste').addEventListener('click',()=>{
-const nom=$('#newPosteNom').value||'X';
-const debut=parseHM($('#newPosteDebut').value)||0;
-const fin=parseHM($('#newPosteFin').value)||0;
-const id=nom[0].toUpperCase();
-data.postes.push({id,nom,debut,fin,couleur:'bg-white/10 border-white/20'});
+function updateNewPostePreview(){
+  const nomEl=document.querySelector('#newPosteNom');
+  const debutEl=document.querySelector('#newPosteDebut');
+  const finEl=document.querySelector('#newPosteFin');
+  const couleurEl=document.querySelector('#newPosteCouleur');
+  const previewEl=document.querySelector('#newPostePreview');
+  if(!previewEl) return;
+  const nom = nomEl ? (nomEl.value||'X') : 'X';
+  const id = nom[0] ? nom[0].toUpperCase() : 'X';
+  const debut = debutEl ? debutEl.value : '06:00';
+  const fin = finEl ? finEl.value : '14:00';
+  const couleur = couleurEl ? couleurEl.value : 'bg-blue-500/30 border-blue-500/50 text-blue-300';
+  previewEl.className = 'flex-1 h-9 rounded-xl border flex items-center justify-center text-[10px] mono font-bold '+couleur;
+  previewEl.textContent = 'Aperçu: '+id+' - '+nom+' '+debut+'-'+fin;
+}
+document.addEventListener('DOMContentLoaded', ()=>{ updateNewPostePreview(); });
+setTimeout(()=>{ updateNewPostePreview(); },500);
+
+const addPosteBtn=document.querySelector('#addPoste');
+if(addPosteBtn){
+addPosteBtn.addEventListener('click',()=>{
+const nomEl=document.querySelector('#newPosteNom');
+const debutEl=document.querySelector('#newPosteDebut');
+const finEl=document.querySelector('#newPosteFin');
+const couleurEl=document.querySelector('#newPosteCouleur');
+const nom= nomEl ? (nomEl.value.trim()||'X') : 'X';
+const debut= debutEl ? (parseHM(debutEl.value)||0) : 0;
+const fin= finEl ? (parseHM(finEl.value)||0) : 0;
+let id=nom[0].toUpperCase();
+// évite doublon d'ID
+let baseId=id; let n=1;
+while(data.postes.some(p=>p.id===id)){
+  id=baseId+n; n++;
+  if(n>9) break;
+}
+const couleur = couleurEl ? couleurEl.value : 'bg-white/10 border-white/20 text-white/60';
+data.postes.push({id,nom,debut,fin,couleur});
 save(); renderReglages();
+if(nomEl) nomEl.value='';
+updateNewPostePreview();
 });
+}
+// Live preview listeners
+['#newPosteNom','#newPosteDebut','#newPosteFin','#newPosteCouleur'].forEach(sel=>{
+  const el=document.querySelector(sel);
+  if(el) el.addEventListener('input', updateNewPostePreview);
+  if(el) el.addEventListener('change', updateNewPostePreview);
+});
+
 $('#cycleStart').addEventListener('change',e=>{ data.cycleStart=e.target.value; save(); });
 $('#clearCycle').addEventListener('click',()=>{ data.cycle=[]; save(); renderReglages(); });
 
