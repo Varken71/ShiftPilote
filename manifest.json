@@ -1,0 +1,50 @@
+{
+  "name": "ShiftPilot - Votre temps de travail, maîtrisé.",
+  "short_name": "ShiftPilot",
+  "description": "Votre temps de travail, maîtrisé. Pointeuse 3x8, banque HS, planning.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "display_override": [
+    "standalone",
+    "window-controls-overlay"
+  ],
+  "background_color": "#0a0e13",
+  "theme_color": "#06b6d4",
+  "orientation": "portrait-primary",
+  "categories": [
+    "productivity",
+    "business"
+  ],
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-192-maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "./icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "./icon-180.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
