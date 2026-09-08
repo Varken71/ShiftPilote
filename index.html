@@ -153,7 +153,7 @@ body{font-family:Inter,sans-serif;background:#0a0e13;color:#e2e8f0}
 </div>
 
 <div class="glass rounded-2xl p-4 grid grid-cols-3 gap-3 text-center">
-<div><div class="text-[10px] text-white/40 mono">TRAVAILLÉ</div><div id="todayWorked" class="font-bold mono text-cyan-400">0h00</div><div id="liveBadge" class="hidden mt-1 text-[8px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 animate-pulse inline-block">● LIVE</div></div>
+<div><div class="text-[10px] text-white/40 mono">TRAVAILLÉ</div><span id="liveBadge" class="hidden ml-2 text-[9px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 animate-pulse">● LIVE</span><div id="todayWorked" class="font-bold mono text-cyan-400">0h00</div></div>
 <div><div class="text-[10px] text-white/40 mono">FIN ESTIMÉE</div><div id="finEstimee" class="font-bold mono">--:--</div><div id="finDetail" class="text-[9px] mono text-white/40"></div></div>
 <div><div class="text-[10px] text-white/40 mono">OBJECTIF JOUR</div><div id="objJour" class="font-bold mono">7h45</div></div>
 </div>
@@ -228,19 +228,24 @@ body{font-family:Inter,sans-serif;background:#0a0e13;color:#e2e8f0}
 <div id="banqueMensuel" class="">
 <div class="mt-4 grid md:grid-cols-3 gap-3">
 <div class="glass rounded-2xl p-4 text-center">
-<div class="text-[10px] mono text-white/40">THÉORIQUE MOIS</div>
+<div class="text-[10px] mono text-white/40">THÉORIQUE TOTAL MOIS</div>
 <div id="theoriqueMois" class="text-xl font-bold mono text-white/60">0h00</div>
+<div class="text-[9px] mono text-white/30 mt-1">tout le mois</div>
 <div id="moisName" class="text-xs mono mt-1">Septembre 2026</div>
 </div>
 <div class="glass rounded-2xl p-4 text-center border-cyan-500/20">
-<div class="text-[10px] mono text-white/40">RÉALISÉ</div>
-<div id="realiseMois" class="text-xl font-bold mono text-white">0h00</div>
-<div class="text-[9px] mono text-white/30 mt-1">travail effectif</div>
+<div class="text-[10px] mono text-white/40">THÉORIQUE DÛ À CE JOUR</div>
+<div id="theoriqueDuMois" class="text-xl font-bold mono text-amber-300">0h00</div>
+<div class="text-[9px] mono text-white/30 mt-1">jusqu'à aujourd'hui</div>
+<div class="mt-2 pt-2 border-t border-white/5">
+<div class="text-[9px] mono text-white/40">RÉALISÉ</div>
+<div id="realiseMois" class="text-lg font-bold mono text-white">0h00</div>
+</div>
 </div>
 <div class="glass rounded-2xl p-4 text-center bg-cyan-500/5 border-cyan-500/20">
-<div class="text-[10px] mono text-white/40">SOLDE MOIS (HS)</div>
+<div class="text-[10px] mono text-white/40">HS ACTUEL (futur supposé fait)</div>
 <div id="soldeMois" class="text-3xl font-extrabold mono text-cyan-400">+0h00</div>
-<div id="hsDetailMois" class="text-[10px] mono text-white/40 mt-1">Réalisé - Théorique</div>
+<div id="hsDetailMois" class="text-[10px] mono text-white/40 mt-1">Réalisé - Dû</div>
 </div>
 </div>
 <div class="mt-3 glass rounded-2xl p-4">
@@ -262,8 +267,10 @@ body{font-family:Inter,sans-serif;background:#0a0e13;color:#e2e8f0}
 <div id="soldeAnnuel" class="text-4xl font-extrabold mono text-cyan-400">+0h00</div>
 <div id="periodeLabel" class="text-[10px] mono mt-1 text-white/50">01/01/2026 - 31/12/2026</div>
 <div class="mt-3 pt-3 border-t border-white/10 grid grid-cols-2 gap-2 text-[10px] mono">
-<div><span class="text-white/40">Théorique</span><div id="theoriqueAnnuel" class="font-bold text-white/70">0h00</div></div>
-<div><span class="text-white/40">Réalisé</span><div id="realiseAnnuel" class="font-bold text-white">0h00</div></div>
+<div><span class="text-white/40">Théo total période</span><div id="theoriqueAnnuel" class="font-bold text-white/70">0h00</div></div>
+<div><span class="text-white/40">Réalisé total</span><div id="realiseAnnuel" class="font-bold text-white">0h00</div></div>
+<div><span class="text-amber-300/60">Théo dû à ce jour</span><div id="theoriqueDuAnnuel" class="font-bold text-amber-300">0h00</div></div>
+<div><span class="text-white/60">Réalisé à ce jour</span><div id="realiseDuAnnuel" class="font-bold text-white">0h00</div></div>
 </div>
 </div>
 <div class="glass rounded-2xl p-4">
@@ -811,8 +818,8 @@ if(todayPoint && todayPoint.arrivee){
 }
 
 // week
-const now=new Date();
-const startWeek = addDays(now, -((now.getDay()+6)%7));
+const nowWeek=new Date();
+const startWeek = addDays(nowWeek, -((nowWeek.getDay()+6)%7));
 let weekDone=0;
 let weekObjAdj=0;
 let details='';
@@ -845,7 +852,7 @@ $('#weekSup').textContent=(sup>=0?'+':'')+fmtMin(sup);
 $('#weekSup').className = sup>=0 ? 'text-emerald-400' : 'text-red-400';
 $('#headerProgress').textContent=`${fmtMin(weekDone)} / ${fmtMin(weekObjAdj||data.objHebdo)}`;
 $('#headerBar').style.width = weekObjAdj? Math.min(100, (weekDone/weekObjAdj*100))+'%' : '0%';
-$('#weekNum').textContent='S '+getWeekNumber(now);
+$('#weekNum').textContent='S '+getWeekNumber(nowWeek);
 // last poste
 const yest = addDays(new Date(),-1);
 const yIso=isoDate(yest);
@@ -1380,36 +1387,56 @@ $('#periodeLabel').textContent=data.periodeDebut.split('-').reverse().join('/')+
 if(data.modeBanque==='mensuel'){
 const bmEl=document.querySelector('#banqueMensuel'); if(bmEl) bmEl.classList.remove('hidden');
 const baEl=document.querySelector('#banqueAnnuel'); if(baEl) baEl.classList.add('hidden');
-const now=new Date();
-const year=now.getFullYear(); const month=now.getMonth();
+const nowBanque=new Date();
+const year=nowBanque.getFullYear(); const month=nowBanque.getMonth();
 const start=new Date(year,month,1); const end=new Date(year,month+1,0);
-const res=calcBanqueForRange(start,end);
-const soldeEl=document.querySelector('#soldeMois'); if(soldeEl) soldeEl.textContent=(res.solde>=0?'+':'')+fmtMin(res.solde);
-const theoEl=document.querySelector('#theoriqueMois'); if(theoEl) theoEl.textContent=fmtMin(res.totalObjAdj);
-const realEl=document.querySelector('#realiseMois'); if(realEl) realEl.textContent=fmtMin(res.totalTrav);
-const moisNameEl=document.querySelector('#moisName'); if(moisNameEl) moisNameEl.textContent=now.toLocaleDateString('fr-FR',{month:'long',year:'numeric'});
-// 12 months avec détail théorique / réalisé / HS
+const todayMid = new Date(nowBanque.getFullYear(), nowBanque.getMonth(), nowBanque.getDate());
+const endPast = end < todayMid ? end : todayMid;
+const resFull=calcBanqueForRange(start,end);
+const resPast=calcBanqueForRange(start,endPast);
+// Théorique total mois, théorique dû jusqu'à aujourd'hui, réalisé, solde actuel = réalisé - dû - recup
+const soldeActuel = resPast.supAcquises - resPast.totalRecup;
+const soldeEl=document.querySelector('#soldeMois'); if(soldeEl) soldeEl.textContent=(soldeActuel>=0?'+':'')+fmtMin(soldeActuel);
+const theoEl=document.querySelector('#theoriqueMois'); if(theoEl) theoEl.textContent=fmtMin(resFull.totalObjAdj);
+const theoDuEl=document.querySelector('#theoriqueDuMois'); if(theoDuEl) theoDuEl.textContent=fmtMin(resPast.totalObjAdj);
+const realEl=document.querySelector('#realiseMois'); if(realEl) realEl.textContent=fmtMin(resPast.totalTrav);
+const moisNameEl=document.querySelector('#moisName'); if(moisNameEl) moisNameEl.textContent=nowBanque.toLocaleDateString('fr-FR',{month:'long',year:'numeric'});
+const hsDetailEl=document.querySelector('#hsDetailMois'); if(hsDetailEl) hsDetailEl.textContent=`Réalisé (${fmtMin(resPast.totalTrav)}) - Dû (${fmtMin(resPast.totalObjAdj)})`;
+// 12 months avec détail théorique / réalisé / HS actuel (avec futur supposé fait)
 let list='';
 for(let i=0;i<12;i++){
 const d=addDays(start,-i*30);
 const s=new Date(d.getFullYear(),d.getMonth(),1); const e=new Date(d.getFullYear(),d.getMonth()+1,0);
-const r=calcBanqueForRange(s,e);
-list+=`<div class="flex justify-between py-1.5 border-b border-white/5 text-[11px]"><span class="w-20">${s.toLocaleDateString('fr-FR',{month:'long', year:'2-digit'})}</span><span class="text-white/50">${fmtMin(r.totalObjAdj)}</span><span class="text-white">${fmtMin(r.totalTrav)}</span><span class="${r.solde>=0?'text-emerald-400':'text-red-400'} font-bold">${r.solde>=0?'+':''}${fmtMin(r.solde)}</span></div>`;
+const rFull=calcBanqueForRange(s,e);
+const todayM = new Date();
+const ePast = e < new Date(todayM.getFullYear(), todayM.getMonth(), todayM.getDate()) ? e : new Date(todayM.getFullYear(), todayM.getMonth(), todayM.getDate());
+const rPast = (s.getMonth()===todayM.getMonth() && s.getFullYear()===todayM.getFullYear()) ? calcBanqueForRange(s,ePast) : rFull;
+const soldeAct = (s.getMonth()===todayM.getMonth() && s.getFullYear()===todayM.getFullYear()) ? (rPast.supAcquises - rPast.totalRecup) : rFull.solde;
+list+=`<div class="flex justify-between py-1.5 border-b border-white/5 text-[11px]"><span class="w-20">${s.toLocaleDateString('fr-FR',{month:'long', year:'2-digit'})}</span><span class="text-white/50">${fmtMin(rFull.totalObjAdj)}</span><span class="text-white">${fmtMin(rFull.totalTrav)}</span><span class="${soldeAct>=0?'text-emerald-400':'text-red-400'} font-bold">${soldeAct>=0?'+':''}${fmtMin(soldeAct)}</span></div>`;
 }
-const listEl=document.querySelector('#listMois'); if(listEl) listEl.innerHTML='<div class="flex justify-between text-[9px] text-white/30 mb-1"><span class="w-20">Mois</span><span>Théo</span><span>Réel</span><span>HS</span></div>'+list;
+const listEl=document.querySelector('#listMois'); if(listEl) listEl.innerHTML='<div class="flex justify-between text-[9px] text-white/30 mb-1"><span class="w-20">Mois</span><span>Théo tot</span><span>Réel</span><span>HS actuel</span></div>'+list;
 }else{
 const baEl2=document.querySelector('#banqueAnnuel'); if(baEl2) baEl2.classList.remove('hidden');
 const bmEl2=document.querySelector('#banqueMensuel'); if(bmEl2) bmEl2.classList.add('hidden');
-const res=calcBanqueForRange(new Date(data.periodeDebut), new Date(data.periodeFin));
-const supEl=document.querySelector('#supAcquises'); if(supEl) supEl.textContent=(res.supAcquises>=0?'+':'')+fmtMin(res.supAcquises);
-const recupEl=document.querySelector('#recupPosees'); if(recupEl) recupEl.textContent='-'+fmtMin(res.totalRecup);
-const soldeEl2=document.querySelector('#soldeAnnuel'); if(soldeEl2) soldeEl2.textContent=(res.solde>=0?'+':'')+fmtMin(res.solde);
-const soldeFinalEl=document.querySelector('#soldeFinal'); if(soldeFinalEl) soldeFinalEl.textContent=(res.solde>=0?'+':'')+fmtMin(res.solde);
-if(soldeEl2) soldeEl2.className='text-4xl font-extrabold mono '+(res.solde>=0?'text-emerald-400':'text-red-400');
+const debutPer = new Date(data.periodeDebut); const finPer = new Date(data.periodeFin);
+const res=calcBanqueForRange(debutPer, finPer);
+const nowA = new Date(); const todayMidA = new Date(nowA.getFullYear(), nowA.getMonth(), nowA.getDate());
+const finPastA = finPer < todayMidA ? finPer : todayMidA;
+const debutPastA = debutPer > todayMidA ? debutPer : debutPer;
+const resPastA = (debutPer <= todayMidA) ? calcBanqueForRange(debutPer, finPastA) : {supAcquises:0,totalRecup:0,totalObjAdj:0,totalTrav:0,solde:0};
+const soldeActuelA = resPastA.supAcquises - resPastA.totalRecup;
+const supEl=document.querySelector('#supAcquises'); if(supEl) supEl.textContent=(resPastA.supAcquises>=0?'+':'')+fmtMin(resPastA.supAcquises);
+const recupEl=document.querySelector('#recupPosees'); if(recupEl) recupEl.textContent='-'+fmtMin(resPastA.totalRecup);
+const soldeEl2=document.querySelector('#soldeAnnuel'); if(soldeEl2) soldeEl2.textContent=(soldeActuelA>=0?'+':'')+fmtMin(soldeActuelA);
+const soldeFinalEl=document.querySelector('#soldeFinal'); if(soldeFinalEl) soldeFinalEl.textContent=(soldeActuelA>=0?'+':'')+fmtMin(soldeActuelA);
+if(soldeEl2) soldeEl2.className='text-4xl font-extrabold mono '+(soldeActuelA>=0?'text-emerald-400':'text-red-400');
 const theoAnnEl=document.querySelector('#theoriqueAnnuel'); if(theoAnnEl) theoAnnEl.textContent=fmtMin(res.totalObjAdj);
 const realAnnEl=document.querySelector('#realiseAnnuel'); if(realAnnEl) realAnnEl.textContent=fmtMin(res.totalTrav);
 const theoAnnEl2=document.querySelector('#theoriqueAnnuel2'); if(theoAnnEl2) theoAnnEl2.textContent=fmtMin(res.totalObjAdj);
 const realAnnEl2=document.querySelector('#realiseAnnuel2'); if(realAnnEl2) realAnnEl2.textContent=fmtMin(res.totalTrav);
+const theoDuAnnEl=document.querySelector('#theoriqueDuAnnuel'); if(theoDuAnnEl) theoDuAnnEl.textContent=fmtMin(resPastA.totalObjAdj);
+const realDuAnnEl=document.querySelector('#realiseDuAnnuel'); if(realDuAnnEl) realDuAnnEl.textContent=fmtMin(resPastA.totalTrav);
+
 // bar chart monthly
 let bars=''; let labels='';
 for(let m=0;m<12;m++){
