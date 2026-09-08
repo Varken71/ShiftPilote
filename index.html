@@ -153,7 +153,7 @@ body{font-family:Inter,sans-serif;background:#0a0e13;color:#e2e8f0}
 </div>
 
 <div class="glass rounded-2xl p-4 grid grid-cols-3 gap-3 text-center">
-<div><div class="text-[10px] text-white/40 mono">TRAVAILLÉ</div><div id="todayWorked" class="font-bold mono text-cyan-400">0h00</div></div>
+<div><div class="text-[10px] text-white/40 mono">TRAVAILLÉ</div><span id="liveBadge" class="hidden ml-2 text-[9px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 animate-pulse">● LIVE</span><div id="todayWorked" class="font-bold mono text-cyan-400">0h00</div></div>
 <div><div class="text-[10px] text-white/40 mono">FIN ESTIMÉE</div><div id="finEstimee" class="font-bold mono">--:--</div><div id="finDetail" class="text-[9px] mono text-white/40"></div></div>
 <div><div class="text-[10px] text-white/40 mono">OBJECTIF JOUR</div><div id="objJour" class="font-bold mono">7h45</div></div>
 </div>
@@ -228,14 +228,24 @@ body{font-family:Inter,sans-serif;background:#0a0e13;color:#e2e8f0}
 <div id="banqueMensuel" class="">
 <div class="mt-4 grid md:grid-cols-3 gap-3">
 <div class="glass rounded-2xl p-4 text-center">
-<div class="text-[10px] mono text-white/40">SOLDE MOIS</div>
-<div id="soldeMois" class="text-3xl font-extrabold mono text-cyan-400">+0h00</div>
+<div class="text-[10px] mono text-white/40">THÉORIQUE MOIS</div>
+<div id="theoriqueMois" class="text-xl font-bold mono text-white/60">0h00</div>
 <div id="moisName" class="text-xs mono mt-1">Septembre 2026</div>
 </div>
-<div class="md:col-span-2 glass rounded-2xl p-4">
-<h4 class="text-xs mono font-bold mb-2">12 DERNIERS MOIS</h4>
-<div id="listMois" class="space-y-1 max-h-64 overflow-auto"></div>
+<div class="glass rounded-2xl p-4 text-center border-cyan-500/20">
+<div class="text-[10px] mono text-white/40">RÉALISÉ</div>
+<div id="realiseMois" class="text-xl font-bold mono text-white">0h00</div>
+<div class="text-[9px] mono text-white/30 mt-1">travail effectif</div>
 </div>
+<div class="glass rounded-2xl p-4 text-center bg-cyan-500/5 border-cyan-500/20">
+<div class="text-[10px] mono text-white/40">SOLDE MOIS (HS)</div>
+<div id="soldeMois" class="text-3xl font-extrabold mono text-cyan-400">+0h00</div>
+<div id="hsDetailMois" class="text-[10px] mono text-white/40 mt-1">Réalisé - Théorique</div>
+</div>
+</div>
+<div class="mt-3 glass rounded-2xl p-4">
+<h4 class="text-xs mono font-bold mb-2">12 DERNIERS MOIS - Théorique vs Réalisé</h4>
+<div id="listMois" class="space-y-1 max-h-64 overflow-auto"></div>
 </div>
 </div>
 
@@ -251,11 +261,21 @@ body{font-family:Inter,sans-serif;background:#0a0e13;color:#e2e8f0}
 <div class="text-[10px] mono text-white/40">SOLDE BANQUE ANNUELLE</div>
 <div id="soldeAnnuel" class="text-4xl font-extrabold mono text-cyan-400">+0h00</div>
 <div id="periodeLabel" class="text-[10px] mono mt-1 text-white/50">01/01/2026 - 31/12/2026</div>
+<div class="mt-3 pt-3 border-t border-white/10 grid grid-cols-2 gap-2 text-[10px] mono">
+<div><span class="text-white/40">Théorique</span><div id="theoriqueAnnuel" class="font-bold text-white/70">0h00</div></div>
+<div><span class="text-white/40">Réalisé</span><div id="realiseAnnuel" class="font-bold text-white">0h00</div></div>
+</div>
 </div>
 <div class="glass rounded-2xl p-4">
-<div class="text-[10px] mono">Sup acquises</div><div id="supAcquises" class="font-bold mono text-emerald-400">+0h00</div>
+<div class="grid grid-cols-2 gap-3">
+<div><div class="text-[9px] mono text-white/40">THÉORIQUE</div><div id="theoriqueAnnuel2" class="font-bold mono text-white/60 text-sm">0h00</div></div>
+<div><div class="text-[9px] mono text-white/40">RÉALISÉ</div><div id="realiseAnnuel2" class="font-bold mono text-white text-sm">0h00</div></div>
+</div>
+<div class="mt-3 pt-3 border-t border-white/5">
+<div class="text-[10px] mono">Sup acquises (Réalisé - Théorique)</div><div id="supAcquises" class="font-bold mono text-emerald-400">+0h00</div>
 <div class="text-[10px] mono mt-2">Récup posées</div><div id="recupPosees" class="font-bold mono text-violet-400">-0h00</div>
-<div class="border-t border-white/10 mt-2 pt-2 flex justify-between font-bold mono"><span>Solde</span><span id="soldeFinal">+0h00</span></div>
+<div class="border-t border-white/10 mt-2 pt-2 flex justify-between font-bold mono"><span>Solde HS</span><span id="soldeFinal">+0h00</span></div>
+</div>
 </div>
 <div class="glass rounded-2xl p-4">
 <h4 class="text-[10px] mono font-bold mb-2">RÉPARTITION MENSUELLE</h4>
@@ -734,22 +754,62 @@ if(tab==='reglages') renderReglages();
 let currentMonth = new Date();
 function renderHeader(){
 const objJour = Math.round(data.objHebdo/5);
-$('#objJour').textContent=fmtMin(objJour);
+const objJourEl=document.querySelector('#objJour'); if(objJourEl) objJourEl.textContent=fmtMin(objJour);
 const todayStr=isoDate(new Date());
 const todayPoint = data.pointages[todayStr];
+const now = new Date();
 let todayWorked = 0;
-if(todayPoint){
-const arr=parseHM(todayPoint.arrivee)||0;
-const dep=parseHM(todayPoint.depart)||0;
-const pause=todayPoint.pause||0;
-if(dep>arr) todayWorked=dep-arr-pause;
-}
-$('#todayWorked').textContent=fmtMin(todayWorked);
+let isEnPoste = false;
 if(todayPoint && todayPoint.arrivee){
-const finEst = (parseHM(todayPoint.arrivee)||0) + objJour + (todayPoint.pause||0) + (data.pauseStart ? Math.floor((Date.now()-data.pauseStart)/60000) : 0);
-$('#finEstimee').textContent=fmtHM(finEst%1440);
-$('#finDetail').textContent=`${fmtMin(objJour)} + ${todayPoint.pause||0}min pause`;
+  const arrMin=parseHM(todayPoint.arrivee)||0;
+  const depMin=todayPoint.depart ? (parseHM(todayPoint.depart)||0) : null;
+  const pauseTotal=todayPoint.pause||0;
+  const nowMin = now.getHours()*60 + now.getMinutes() + now.getSeconds()/60;
+  if(data.pauseStart){
+    // En pause : travail figé à l'heure de début de pause
+    const pauseStartDate = new Date(data.pauseStart);
+    const pauseStartMin = pauseStartDate.getHours()*60 + pauseStartDate.getMinutes() + pauseStartDate.getSeconds()/60;
+    // Si pause a cheval sur minuit
+    let workUntilPause = pauseStartMin - arrMin;
+    if(workUntilPause<0) workUntilPause+=1440;
+    todayWorked = Math.max(0, workUntilPause - pauseTotal);
+    isEnPoste = true;
+  }else if(depMin!==null){
+    let diff = depMin - arrMin - pauseTotal;
+    if(diff<0) diff+=1440;
+    todayWorked = Math.max(0, diff);
+  }else{
+    // En poste, temps réel
+    let diff = nowMin - arrMin - pauseTotal;
+    if(diff<0) diff+=1440;
+    todayWorked = Math.max(0, Math.floor(diff));
+    isEnPoste = true;
+  }
 }
+const todayWorkedEl=document.querySelector('#todayWorked'); if(todayWorkedEl) todayWorkedEl.textContent=fmtMin(todayWorked);
+if(todayPoint && todayPoint.arrivee){
+  const arrMin=parseHM(todayPoint.arrivee)||0;
+  const pauseTotal=todayPoint.pause||0;
+  const currentPauseExtra = data.pauseStart ? Math.floor((Date.now()-data.pauseStart)/60000) : 0;
+  const finEst = arrMin + objJour + pauseTotal + currentPauseExtra;
+  const finEstEl=document.querySelector('#finEstimee'); if(finEstEl) finEstEl.textContent=fmtHM(finEst%1440);
+  const finDetailEl=document.querySelector('#finDetail'); if(finDetailEl) finDetailEl.textContent=`${fmtMin(objJour)} + ${pauseTotal}min pause` + (currentPauseExtra? ` + ${currentPauseExtra}min en cours` : '');
+  // Met à jour l'indicateur temps réel
+  const badgeLive=document.querySelector('#liveBadge');
+  if(badgeLive){
+    if(isEnPoste && !data.pauseStart){
+      badgeLive.classList.remove('hidden');
+      const sec = String(now.getSeconds()).padStart(2,'0');
+      badgeLive.textContent='● LIVE '+fmtMin(todayWorked)+':'+sec;
+    }else{
+      badgeLive.classList.add('hidden');
+    }
+  }
+}else{
+  const finEstEl=document.querySelector('#finEstimee'); if(finEstEl) finEstEl.textContent='--:--';
+  const finDetailEl=document.querySelector('#finDetail'); if(finDetailEl) finDetailEl.textContent='-';
+}
+
 // week
 const now=new Date();
 const startWeek = addDays(now, -((now.getDay()+6)%7));
@@ -1318,30 +1378,38 @@ const pdEl=document.querySelector('#periodeDebut'); if(pdEl) pdEl.value=data.per
 $('#periodeFin').value=data.periodeFin;
 $('#periodeLabel').textContent=data.periodeDebut.split('-').reverse().join('/')+' - '+data.periodeFin.split('-').reverse().join('/');
 if(data.modeBanque==='mensuel'){
-$('#banqueMensuel').classList.remove('hidden'); $('#banqueAnnuel').classList.add('hidden');
+const bmEl=document.querySelector('#banqueMensuel'); if(bmEl) bmEl.classList.remove('hidden');
+const baEl=document.querySelector('#banqueAnnuel'); if(baEl) baEl.classList.add('hidden');
 const now=new Date();
 const year=now.getFullYear(); const month=now.getMonth();
 const start=new Date(year,month,1); const end=new Date(year,month+1,0);
 const res=calcBanqueForRange(start,end);
-$('#soldeMois').textContent=(res.solde>=0?'+':'')+fmtMin(res.solde);
-$('#moisName').textContent=now.toLocaleDateString('fr-FR',{month:'long',year:'numeric'});
-// 12 months
+const soldeEl=document.querySelector('#soldeMois'); if(soldeEl) soldeEl.textContent=(res.solde>=0?'+':'')+fmtMin(res.solde);
+const theoEl=document.querySelector('#theoriqueMois'); if(theoEl) theoEl.textContent=fmtMin(res.totalObjAdj);
+const realEl=document.querySelector('#realiseMois'); if(realEl) realEl.textContent=fmtMin(res.totalTrav);
+const moisNameEl=document.querySelector('#moisName'); if(moisNameEl) moisNameEl.textContent=now.toLocaleDateString('fr-FR',{month:'long',year:'numeric'});
+// 12 months avec détail théorique / réalisé / HS
 let list='';
 for(let i=0;i<12;i++){
 const d=addDays(start,-i*30);
 const s=new Date(d.getFullYear(),d.getMonth(),1); const e=new Date(d.getFullYear(),d.getMonth()+1,0);
 const r=calcBanqueForRange(s,e);
-list+=`<div class="flex justify-between py-1 border-b border-white/5"><span>${s.toLocaleDateString('fr-FR',{month:'long'})}</span><span class="${r.solde>=0?'text-emerald-400':'text-red-400'}">${r.solde>=0?'+':''}${fmtMin(r.solde)}</span></div>`;
+list+=`<div class="flex justify-between py-1.5 border-b border-white/5 text-[11px]"><span class="w-20">${s.toLocaleDateString('fr-FR',{month:'long', year:'2-digit'})}</span><span class="text-white/50">${fmtMin(r.totalObjAdj)}</span><span class="text-white">${fmtMin(r.totalTrav)}</span><span class="${r.solde>=0?'text-emerald-400':'text-red-400'} font-bold">${r.solde>=0?'+':''}${fmtMin(r.solde)}</span></div>`;
 }
-$('#listMois').innerHTML=list;
+const listEl=document.querySelector('#listMois'); if(listEl) listEl.innerHTML='<div class="flex justify-between text-[9px] text-white/30 mb-1"><span class="w-20">Mois</span><span>Théo</span><span>Réel</span><span>HS</span></div>'+list;
 }else{
-$('#banqueAnnuel').classList.remove('hidden'); $('#banqueMensuel').classList.add('hidden');
+const baEl2=document.querySelector('#banqueAnnuel'); if(baEl2) baEl2.classList.remove('hidden');
+const bmEl2=document.querySelector('#banqueMensuel'); if(bmEl2) bmEl2.classList.add('hidden');
 const res=calcBanqueForRange(new Date(data.periodeDebut), new Date(data.periodeFin));
-$('#supAcquises').textContent=(res.supAcquises>=0?'+':'')+fmtMin(res.supAcquises);
-$('#recupPosees').textContent='-'+fmtMin(res.totalRecup);
-$('#soldeAnnuel').textContent=(res.solde>=0?'+':'')+fmtMin(res.solde);
-$('#soldeFinal').textContent=(res.solde>=0?'+':'')+fmtMin(res.solde);
-$('#soldeAnnuel').className='text-4xl font-extrabold mono '+(res.solde>=0?'text-emerald-400':'text-red-400');
+const supEl=document.querySelector('#supAcquises'); if(supEl) supEl.textContent=(res.supAcquises>=0?'+':'')+fmtMin(res.supAcquises);
+const recupEl=document.querySelector('#recupPosees'); if(recupEl) recupEl.textContent='-'+fmtMin(res.totalRecup);
+const soldeEl2=document.querySelector('#soldeAnnuel'); if(soldeEl2) soldeEl2.textContent=(res.solde>=0?'+':'')+fmtMin(res.solde);
+const soldeFinalEl=document.querySelector('#soldeFinal'); if(soldeFinalEl) soldeFinalEl.textContent=(res.solde>=0?'+':'')+fmtMin(res.solde);
+if(soldeEl2) soldeEl2.className='text-4xl font-extrabold mono '+(res.solde>=0?'text-emerald-400':'text-red-400');
+const theoAnnEl=document.querySelector('#theoriqueAnnuel'); if(theoAnnEl) theoAnnEl.textContent=fmtMin(res.totalObjAdj);
+const realAnnEl=document.querySelector('#realiseAnnuel'); if(realAnnEl) realAnnEl.textContent=fmtMin(res.totalTrav);
+const theoAnnEl2=document.querySelector('#theoriqueAnnuel2'); if(theoAnnEl2) theoAnnEl2.textContent=fmtMin(res.totalObjAdj);
+const realAnnEl2=document.querySelector('#realiseAnnuel2'); if(realAnnEl2) realAnnEl2.textContent=fmtMin(res.totalTrav);
 // bar chart monthly
 let bars=''; let labels='';
 for(let m=0;m<12;m++){
@@ -1550,7 +1618,7 @@ renderPlanning();
 renderBanque();
 setupDeleteAll();
 restorePointeuseState();
-setInterval(()=>{ renderHeader(); restorePointeuseState(); },60000);
+setInterval(()=>{ renderHeader(); restorePointeuseState(); },1000);
 if(data.pauseStart){ 
   if(data.pauseRappel===undefined) data.pauseRappel=1;
   if(data.pauseSon===undefined) data.pauseSon=true;
