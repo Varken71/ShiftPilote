@@ -21,6 +21,27 @@
 :where(code, pre, kbd, samp) {
   font-family: "Optimistic Mono", ui-monospace, monospace;
 }
+</style><style>
+@font-face {
+  font-family: "Optimistic";
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url("/fonts/OptimisticAI_VF_Optimized.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Optimistic Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/OptimisticMono_W_TextRegular.woff2") format("woff2");
+}
+:where(html) {
+  font-family: "Optimistic", system-ui, sans-serif;
+}
+:where(code, pre, kbd, samp) {
+  font-family: "Optimistic Mono", ui-monospace, monospace;
+}
 </style>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -250,6 +271,19 @@ body{font-family:Inter,sans-serif;background:#0a0e13;color:#e2e8f0}
 </div>
 <div class="mt-3 glass rounded-2xl p-4">
 <h4 class="text-xs mono font-bold mb-2">12 DERNIERS MOIS - Théorique vs Réalisé</h4>
+<div class="mt-3 glass rounded-2xl p-4 border-amber-500/20">
+<div class="flex justify-between items-center">
+<div>
+<div class="text-[10px] mono text-white/40">HEURES GRATUITES (non comptées HS)</div>
+<div id="gratuitMois" class="text-xl font-bold mono text-amber-300">0h00</div>
+<div class="text-[9px] mono text-white/30 mt-1">Avant: <span id="gratuitAvantMois">0h00</span> • Après: <span id="gratuitApresMois">0h00</span> • Total offert</div>
+</div>
+<div class="text-right">
+<div class="text-[10px] mono text-white/40">Détail</div>
+<div id="gratuitDetailMois" class="text-[10px] mono text-white/60">-</div>
+</div>
+</div>
+</div>
 <div id="listMois" class="space-y-1 max-h-64 overflow-auto"></div>
 </div>
 </div>
@@ -281,6 +315,8 @@ body{font-family:Inter,sans-serif;background:#0a0e13;color:#e2e8f0}
 <div class="mt-3 pt-3 border-t border-white/5">
 <div class="text-[10px] mono">Sup acquises (Réalisé - Théorique)</div><div id="supAcquises" class="font-bold mono text-emerald-400">+0h00</div>
 <div class="text-[10px] mono mt-2">Récup posées</div><div id="recupPosees" class="font-bold mono text-violet-400">-0h00</div>
+<div class="text-[10px] mono mt-2">Heures Gratuites</div><div id="gratuitAnnuel" class="font-bold mono text-amber-400">0h00</div>
+<div class="text-[9px] mono text-white/30">Avant <span id="gratuitAvantAnnuel">0h00</span> • Après <span id="gratuitApresAnnuel">0h00</span></div>
 <div class="border-t border-white/10 mt-2 pt-2 flex justify-between font-bold mono"><span>Solde HS</span><span id="soldeFinal">+0h00</span></div>
 </div>
 </div>
@@ -293,7 +329,7 @@ body{font-family:Inter,sans-serif;background:#0a0e13;color:#e2e8f0}
 
 <div class="mt-4 glass rounded-2xl p-4 overflow-auto">
 <table class="w-full text-[11px] mono">
-<thead><tr class="text-white/40"><th class="text-left py-1">Date</th><th>Type</th><th>Sup</th><th>Récup</th><th>Solde cumulé</th></tr></thead>
+<thead><tr class="text-white/40"><th class="text-left py-1">Date</th><th>Type</th><th>Sup</th><th>Récup</th><th>Gratuit</th><th>Solde cumulé</th></tr></thead>
 <tbody id="tableBanque"></tbody>
 </table>
 </div>
@@ -314,7 +350,7 @@ body{font-family:Inter,sans-serif;background:#0a0e13;color:#e2e8f0}
 </div>
 </div>
 <table class="w-full text-[11px] mono">
-<thead><tr class="text-white/40 border-b border-white/10"><th class="text-left py-2">Date</th><th>Poste</th><th>Arr</th><th>Dép</th><th>Pause</th><th>Trav</th><th>Écart</th><th>Repos</th><th>Abs</th><th>Action</th></tr></thead>
+<thead><tr class="text-white/40 border-b border-white/10"><th class="text-left py-2">Date</th><th>Poste</th><th>Arr</th><th>Dép</th><th>Pause</th><th>Trav</th><th>Gratuit</th><th>Écart</th><th>Abs</th><th>Action</th></tr></thead>
 <tbody id="tableHist"></tbody>
 </table>
 <p class="mt-3 text-[9px] mono text-white/30">💡 Clique sur ✕ pour supprimer un jour. Tout effacer supprime tous les pointages (pas les congés posés).</p>
@@ -395,6 +431,58 @@ body{font-family:Inter,sans-serif;background:#0a0e13;color:#e2e8f0}
 <button id="testRappel" class="flex-1 py-2 rounded-xl bg-amber-500/20 border border-amber-500/30 text-amber-200 text-[11px] mono font-bold">⚡ TEST RAPPEL</button>
 </div>
 <p class="mt-2 text-[9px] mono text-white/40">Son + visuel + notif. À l'échéance, overlay plein écran + son en boucle.</p>
+</div>
+</div>
+
+
+<div class="glass rounded-2xl p-5 border-cyan-500/20">
+<h3 class="font-bold mono mb-4">⏱️ TOLÉRANCE HEURES SUP <span class="text-[9px] px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300">NOUVEAU</span></h3>
+<p class="text-[10px] mono text-white/50 mb-4 leading-relaxed">Temps travaillé hors planning :<br><span class="text-white">≤ tolérance = 100% Gratuit</span> (ne compte pas en HS)<br><span class="text-emerald-300">> tolérance = 100% en HS</span> (plus de gratuit)<br>Ex: poste 21h-05h, tolérance après 10min → départ 05h10 = 10min Gratuit, départ 05h15 = 15min HS.</p>
+
+<div class="mb-6">
+<div class="flex justify-between items-center mb-2">
+<span class="text-xs mono font-bold">Avant poste (arrivée en avance)</span>
+<span id="tolAvantDisplay" class="text-lg font-extrabold mono text-cyan-400">10min</span>
+</div>
+<div class="flex items-center gap-3">
+<button id="tolAvantMinus" class="w-10 h-10 rounded-full bg-white/10 font-bold">-1</button>
+<input id="tolAvantSlider" type="range" min="0" max="120" step="1" class="flex-1 accent-cyan-400">
+<button id="tolAvantPlus" class="w-10 h-10 rounded-full bg-white/10 font-bold">+1</button>
+</div>
+<div class="mt-2 flex gap-2 flex-wrap">
+<button class="presetTolAvant px-3 py-1 rounded-full bg-white/10 text-xs mono" data-min="0">0min</button>
+<button class="presetTolAvant px-3 py-1 rounded-full bg-white/10 text-xs mono" data-min="5">5min</button>
+<button class="presetTolAvant px-3 py-1 rounded-full bg-cyan-500/30 border border-cyan-500/50 text-xs mono" data-min="10">10min</button>
+<button class="presetTolAvant px-3 py-1 rounded-full bg-white/10 text-xs mono" data-min="15">15min</button>
+<button class="presetTolAvant px-3 py-1 rounded-full bg-white/10 text-xs mono" data-min="30">30min</button>
+<button class="presetTolAvant px-3 py-1 rounded-full bg-white/10 text-xs mono" data-min="60">60min</button>
+</div>
+<div class="text-[9px] mono text-white/30 mt-1">Si tu arrives avant ton poste, ce temps devient gratuit jusqu'à cette limite.</div>
+</div>
+
+<div>
+<div class="flex justify-between items-center mb-2">
+<span class="text-xs mono font-bold">Après poste (départ en retard)</span>
+<span id="tolApresDisplay" class="text-lg font-extrabold mono text-orange-400">10min</span>
+</div>
+<div class="flex items-center gap-3">
+<button id="tolApresMinus" class="w-10 h-10 rounded-full bg-white/10 font-bold">-1</button>
+<input id="tolApresSlider" type="range" min="0" max="120" step="1" class="flex-1 accent-orange-400">
+<button id="tolApresPlus" class="w-10 h-10 rounded-full bg-white/10 font-bold">+1</button>
+</div>
+<div class="mt-2 flex gap-2 flex-wrap">
+<button class="presetTolApres px-3 py-1 rounded-full bg-white/10 text-xs mono" data-min="0">0min</button>
+<button class="presetTolApres px-3 py-1 rounded-full bg-white/10 text-xs mono" data-min="5">5min</button>
+<button class="presetTolApres px-3 py-1 rounded-full bg-orange-500/30 border border-orange-500/50 text-xs mono" data-min="10">10min</button>
+<button class="presetTolApres px-3 py-1 rounded-full bg-white/10 text-xs mono" data-min="15">15min</button>
+<button class="presetTolApres px-3 py-1 rounded-full bg-white/10 text-xs mono" data-min="30">30min</button>
+<button class="presetTolApres px-3 py-1 rounded-full bg-white/10 text-xs mono" data-min="60">60min</button>
+</div>
+<div class="text-[9px] mono text-white/30 mt-1">Si tu pars après ton poste, ce temps devient gratuit jusqu'à cette limite.</div>
+</div>
+
+<div class="mt-4 p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-[10px] mono text-amber-200 leading-relaxed">
+💡 <b>Logique entreprise (seuil 100%):</b> ≤ tolérance = 100% Gratuit. > tolérance = 100% en HS (pas de partiel).<br>Ex: tolérance 10 → +10 = Gratuit, +15 = 15min HS.
 </div>
 </div>
 
@@ -615,7 +703,9 @@ periodeFin:'2026-12-31',
 pauseStart:null,
 ferieMajoration:100,
 customFeries:{},
-suppressedFeries:[]
+suppressedFeries:[],
+toleranceAvant:10,
+toleranceApres:10
 };
 function save(){ localStorage.setItem('pointeuseV4', JSON.stringify(data)); }
 
@@ -793,7 +883,28 @@ if(todayPoint && todayPoint.arrivee){
     isEnPoste = true;
   }
 }
-const todayWorkedEl=document.querySelector('#todayWorked'); if(todayWorkedEl) todayWorkedEl.textContent=fmtMin(todayWorked);
+let todayGratuit=0, todayGratuitDetail={total:0, avant:0, apres:0};
+if(todayPoint && todayPoint.arrivee){
+  const posteTodayId=getPosteForDate(new Date());
+  if(todayPoint.depart){
+    todayGratuitDetail=calcGratuitDetail(todayStr, posteTodayId, todayPoint);
+    todayGratuit=todayGratuitDetail.total;
+  }else{
+    // en poste : calcule gratuit avant seulement
+    const posteT = data.postes.find(x=>x.id===posteTodayId);
+    if(posteT && posteT.debut!==undefined){
+      const aT=parseHM(todayPoint.arrivee);
+      const earlyT=Math.max(0, posteT.debut - aT);
+      const gratuitAvantT=Math.min(earlyT, data.toleranceAvant||0);
+      todayGratuitDetail={total:gratuitAvantT, avant:gratuitAvantT, apres:0, early:earlyT, late:0};
+      todayGratuit=gratuitAvantT;
+    }
+  }
+}
+const todayWorkedEff = Math.max(0, todayWorked - todayGratuit);
+const todayWorkedEl=document.querySelector('#todayWorked'); if(todayWorkedEl) todayWorkedEl.innerHTML=fmtMin(todayWorkedEff)+(todayGratuit?` <span class="text-[9px] text-amber-300">+${fmtMin(todayGratuit)} grat</span>`:'');
+// pour affichage header on garde effectif
+todayWorked = todayWorkedEff;
 if(todayPoint && todayPoint.arrivee){
   const arrMin=parseHM(todayPoint.arrivee)||0;
   const pauseTotal=todayPoint.pause||0;
@@ -835,13 +946,17 @@ const ferieChk=isFerie(d);
 if(ferieChk && !abs && !data.pointages[iso]) objJ=0;
 if(abs && ['CP','RTT','MALADIE','FORMATION'].includes(abs.type)) objJ=0;
 weekObjAdj+=objJ;
-let trav=0;
+let travRaw=0, trav=0, gratuitWeek=0;
+let gDetWeek={total:0, avant:0, apres:0};
 if(p && p.arrivee && p.depart){
-trav=(parseHM(p.depart)-parseHM(p.arrivee)-(p.pause||0));
-if(trav<0) trav+=1440;
+travRaw=(parseHM(p.depart)-parseHM(p.arrivee)-(p.pause||0));
+if(travRaw<0) travRaw+=1440;
+gDetWeek=calcGratuitDetail(iso, posteId, p);
+gratuitWeek=gDetWeek.total;
+trav=Math.max(0, travRaw - gratuitWeek);
 }
 weekDone+=trav;
-details+=`<div class="flex justify-between ${iso===todayStr?'text-cyan-400 font-bold':''}"><span>${d.toLocaleDateString('fr-FR',{weekday:'short'})} ${d.getDate()}</span><span>${p?fmtMin(trav):'-'} / ${fmtMin(objJ)} ${abs?'('+abs.type+')':''}</span></div>`;
+details+=`<div class="flex justify-between ${iso===todayStr?'text-cyan-400 font-bold':''}"><span>${d.toLocaleDateString('fr-FR',{weekday:'short'})} ${d.getDate()}</span><span>${p?fmtMin(travRaw)+(gratuitWeek?' <span class="text-amber-300">-'+fmtMin(gratuitWeek)+' grat</span>':''):'-'} / ${fmtMin(objJ)} ${abs?'('+abs.type+')':''}</span></div>`;
 }
 $('#weekDetails').innerHTML=details;
 $('#weekObj').textContent=fmtMin(weekObjAdj||data.objHebdo);
@@ -1327,9 +1442,34 @@ $('#periodeDebut').addEventListener('change',e=>{ data.periodeDebut=e.target.val
 $('#periodeFin').addEventListener('change',e=>{ data.periodeFin=e.target.value; save(); });
 $('#applyPeriode').addEventListener('click',()=>renderBanque());
 
+
+function calcGratuitDetail(iso, posteId, pointage){
+  if(!pointage || !pointage.arrivee || !pointage.depart) return {total:0, avant:0, apres:0, early:0, late:0};
+  const poste = data.postes.find(x=>x.id===posteId);
+  if(!poste || posteId==='R' || poste.debut===undefined || poste.fin===undefined) return {total:0, avant:0, apres:0, early:0, late:0};
+  const a = parseHM(pointage.arrivee);
+  const dRaw = parseHM(pointage.depart);
+  if(a===null || dRaw===null) return {total:0, avant:0, apres:0, early:0, late:0};
+  let debut = poste.debut;
+  let fin = poste.fin;
+  let plannedStart = debut;
+  let plannedEnd = fin < debut ? fin+1440 : fin;
+  let actualStart = a;
+  let actualEnd = dRaw < a ? dRaw+1440 : dRaw;
+  if(actualEnd < plannedStart) actualEnd += 1440;
+  let early = Math.max(0, plannedStart - actualStart);
+  let late = Math.max(0, actualEnd - plannedEnd);
+  let tolAvant = data.toleranceAvant||0;
+  let tolApres = data.toleranceApres||0;
+  let gratuitAvant = Math.min(early, tolAvant);
+  let gratuitApres = Math.min(late, tolApres);
+  return {total: gratuitAvant+gratuitApres, avant: gratuitAvant, apres: gratuitApres, early, late};
+}
+
 function calcBanqueForRange(debut,fin){
 let cur=new Date(debut); const end=new Date(fin);
-let totalTrav=0, totalObjAdj=0, totalRecup=0;
+let totalTrav=0, totalTravEffectif=0, totalObjAdj=0, totalRecup=0;
+let totalGratuit=0, totalGratuitAvant=0, totalGratuitApres=0;
 let details=[];
 while(cur<=end){
 const iso=isoDate(cur);
@@ -1341,38 +1481,49 @@ if(posteId==='R') objJ=0;
 const ferieName=isFerie(cur);
 let isFerieDay=!!ferieName;
 if(isFerieDay && !abs && !p){ objJ=0; }
-let trav=0;
+let travRaw=0;
+let gratuitDetail={total:0, avant:0, apres:0, early:0, late:0};
+let travEffectif=0;
 if(p && p.arrivee && p.depart){
-const a=parseHM(p.arrivee); const d=parseHM(p.depart); let diff=d-a-(p.pause||0); if(diff<0) diff+=1440; trav=diff;
+const a=parseHM(p.arrivee); const d=parseHM(p.depart); let diff=d-a-(p.pause||0); if(diff<0) diff+=1440; travRaw=diff;
+gratuitDetail=calcGratuitDetail(iso, posteId, p);
+travEffectif=Math.max(0, travRaw - gratuitDetail.total);
+}else{
+travRaw=0; travEffectif=0;
 }
 if(abs){
-if(['CP','RTT','MALADIE','FORMATION'].includes(abs.type)){ objJ=0; trav=0; }
-else if(['RECUP','RC'].includes(abs.type)){ totalRecup+=abs.hours; details.push({date:iso,type:abs.type,sup:0,recup:abs.hours,cum:null}); }
+if(['CP','RTT','MALADIE','FORMATION'].includes(abs.type)){ objJ=0; travRaw=0; travEffectif=0; gratuitDetail={total:0, avant:0, apres:0, early:0, late:0}; }
+else if(['RECUP','RC'].includes(abs.type)){ totalRecup+=abs.hours; details.push({date:iso,type:abs.type,sup:0,recup:abs.hours,cum:null,gratuit:0}); }
 }
-let sup=trav-objJ;
-if(isFerieDay && trav>0){
+let sup=travEffectif-objJ;
+if(isFerieDay && travEffectif>0){
   const maj=data.ferieMajoration||0;
-  const travMaj=Math.round(trav*(1+maj/100));
+  const travMaj=Math.round(travEffectif*(1+maj/100));
   sup=travMaj-objJ;
 }
-totalTrav+=trav; totalObjAdj+=objJ;
-if(objJ>0 || trav>0 || isFerieDay){
-  const typeLabel=isFerieDay ? (trav>0?'FÉRIÉ TRAV':'FÉRIÉ') : (abs?abs.type:posteId);
-  if(sup!==0 || trav>0 || isFerieDay) details.push({date:iso,type:typeLabel,sup,recup:0,cum:null,ferie:ferieName});
+totalTrav+=travRaw;
+totalTravEffectif+=travEffectif;
+totalObjAdj+=objJ;
+totalGratuit+=gratuitDetail.total;
+totalGratuitAvant+=gratuitDetail.avant;
+totalGratuitApres+=gratuitDetail.apres;
+if(objJ>0 || travRaw>0 || isFerieDay){
+  const typeLabel=isFerieDay ? (travRaw>0?'FÉRIÉ TRAV':'FÉRIÉ') : (abs?abs.type:posteId);
+  if(sup!==0 || travRaw>0 || isFerieDay) details.push({date:iso,type:typeLabel,sup,recup:0,cum:null,ferie:ferieName,gratuit:gratuitDetail.total, gratuitAvant:gratuitDetail.avant, gratuitApres:gratuitDetail.apres, travRaw, travEffectif});
 }
 cur=addDays(cur,1);
 }
-let supAcquises = totalTrav - totalObjAdj;
-// recalc sup with majoration for total
+let supAcquises = totalTravEffectif - totalObjAdj;
 let supMaj=0;
 details.forEach(d=>{ if(!d.recup) supMaj+=d.sup; });
 let solde = supMaj - totalRecup;
 let running=0;
 details.forEach(d=>{ if(d.recup){ running-=d.recup; } else { running+=d.sup; } d.cum=running; });
-return {supAcquises:supMaj, totalRecup, solde, details, totalTrav, totalObjAdj};
+return {supAcquises:supMaj, totalRecup, solde, details, totalTrav:totalTravEffectif, totalTravRaw:totalTrav, totalObjAdj, totalGratuit, totalGratuitAvant, totalGratuitApres};
 }
 
 function renderBanque(){
+
 const mmBtn=document.querySelector('#modeMensuel'); const maBtn=document.querySelector('#modeAnnuel');
 if(data.modeBanque==='mensuel'){
   if(mmBtn) mmBtn.className='px-4 py-1.5 rounded-full text-xs font-bold bg-white text-black';
@@ -1397,6 +1548,10 @@ const resPast=calcBanqueForRange(start,endPast);
 // Théorique total mois, théorique dû jusqu'à aujourd'hui, réalisé, solde actuel = réalisé - dû - recup
 const soldeActuel = resPast.supAcquises - resPast.totalRecup;
 const soldeEl=document.querySelector('#soldeMois'); if(soldeEl) soldeEl.textContent=(soldeActuel>=0?'+':'')+fmtMin(soldeActuel);
+const gratuitMoisEl=document.querySelector('#gratuitMois'); if(gratuitMoisEl) gratuitMoisEl.textContent=fmtMin(resPast.totalGratuit||0);
+const gAvantMoisEl=document.querySelector('#gratuitAvantMois'); if(gAvantMoisEl) gAvantMoisEl.textContent=fmtMin(resPast.totalGratuitAvant||0);
+const gApresMoisEl=document.querySelector('#gratuitApresMois'); if(gApresMoisEl) gApresMoisEl.textContent=fmtMin(resPast.totalGratuitApres||0);
+const gDetailMoisEl=document.querySelector('#gratuitDetailMois'); if(gDetailMoisEl) gDetailMoisEl.textContent=(resPast.totalGratuit? fmtMin(resPast.totalGratuit)+' offert ce mois' : 'Aucune');
 const theoEl=document.querySelector('#theoriqueMois'); if(theoEl) theoEl.textContent=fmtMin(resFull.totalObjAdj);
 const theoDuEl=document.querySelector('#theoriqueDuMois'); if(theoDuEl) theoDuEl.textContent=fmtMin(resPast.totalObjAdj);
 const realEl=document.querySelector('#realiseMois'); if(realEl) realEl.textContent=fmtMin(resPast.totalTrav);
@@ -1426,6 +1581,9 @@ const debutPastA = debutPer > todayMidA ? debutPer : debutPer;
 const resPastA = (debutPer <= todayMidA) ? calcBanqueForRange(debutPer, finPastA) : {supAcquises:0,totalRecup:0,totalObjAdj:0,totalTrav:0,solde:0};
 const soldeActuelA = resPastA.supAcquises - resPastA.totalRecup;
 const supEl=document.querySelector('#supAcquises'); if(supEl) supEl.textContent=(resPastA.supAcquises>=0?'+':'')+fmtMin(resPastA.supAcquises);
+const gratuitAnnEl=document.querySelector('#gratuitAnnuel'); if(gratuitAnnEl) gratuitAnnEl.textContent=fmtMin(resPastA.totalGratuit||0);
+const gAvantAnnEl=document.querySelector('#gratuitAvantAnnuel'); if(gAvantAnnEl) gAvantAnnEl.textContent=fmtMin(resPastA.totalGratuitAvant||0);
+const gApresAnnEl=document.querySelector('#gratuitApresAnnuel'); if(gApresAnnEl) gApresAnnEl.textContent=fmtMin(resPastA.totalGratuitApres||0);
 const recupEl=document.querySelector('#recupPosees'); if(recupEl) recupEl.textContent='-'+fmtMin(resPastA.totalRecup);
 const soldeEl2=document.querySelector('#soldeAnnuel'); if(soldeEl2) soldeEl2.textContent=(soldeActuelA>=0?'+':'')+fmtMin(soldeActuelA);
 const soldeFinalEl=document.querySelector('#soldeFinal'); if(soldeFinalEl) soldeFinalEl.textContent=(soldeActuelA>=0?'+':'')+fmtMin(soldeActuelA);
@@ -1450,7 +1608,7 @@ labels+=`<div class="flex-1 text-center">${s.toLocaleDateString('fr-FR',{month:'
 $('#barChart').innerHTML=bars; $('#barLabels').innerHTML=labels;
 let tbody='';
 res.details.slice(-50).reverse().forEach(d=>{
-tbody+=`<tr class="border-b border-white/5"><td class="py-1">${d.date}</td><td>${d.type}</td><td class="${d.sup>=0?'text-emerald-400':'text-red-400'}">${d.sup?fmtMin(d.sup):'-'}</td><td class="text-violet-400">${d.recup?fmtMin(d.recup):'-'}</td><td class="font-bold">${fmtMin(d.cum)}</td></tr>`;
+tbody+=`<tr class="border-b border-white/5"><td class="py-1">${d.date}</td><td>${d.type}</td><td class="${d.sup>=0?'text-emerald-400':'text-red-400'}">${d.sup?fmtMin(d.sup):'-'}</td><td class="text-violet-400">${d.recup?fmtMin(d.recup):'-'}</td><td class="text-amber-300">${d.gratuit?fmtMin(d.gratuit):'-'}</td><td class="font-bold">${fmtMin(d.cum)}</td></tr>`;
 });
 $('#tableBanque').innerHTML=tbody;
 }
@@ -1463,10 +1621,14 @@ Object.keys(data.pointages).sort().reverse().forEach(iso=>{
 const p=data.pointages[iso];
 const abs=data.absences[iso];
 const poste=getPosteForDate(new Date(iso));
-const trav = p.arrivee && p.depart ? (parseHM(p.depart)-parseHM(p.arrivee)-(p.pause||0)) : 0;
+let travRaw = p.arrivee && p.depart ? (parseHM(p.depart)-parseHM(p.arrivee)-(p.pause||0)) : 0;
+if(travRaw<0) travRaw+=1440;
+const gDetailH = calcGratuitDetail(iso, poste, p);
+const trav = Math.max(0, travRaw - gDetailH.total);
+const gratuitH = gDetailH.total;
 const obj = Math.round(data.objHebdo/5);
 const ecart = trav - obj;
-rows+=`<tr class="border-b border-white/5"><td class="py-2">${iso}</td><td>${poste}</td><td>${p.arrivee||''}</td><td>${p.depart||''}</td><td>${p.pause||0}min</td><td class="text-cyan-300">${fmtMin(trav)}</td><td class="${ecart>=0?'text-emerald-400':'text-red-400'}">${ecart?fmtMin(ecart):''}</td><td class="text-[9px]">-</td><td>${abs?abs.type:''}</td><td><button class="delPointageHist w-6 h-6 rounded-full bg-red-500/15 border border-red-500/30 text-red-300 text-[10px] font-bold hover:bg-red-500/30" data-iso="${iso}" title="Supprimer ${iso}">✕</button></td></tr>`;
+rows+=`<tr class="border-b border-white/5"><td class="py-2">${iso}</td><td>${poste}</td><td>${p.arrivee||''}</td><td>${p.depart||''}</td><td>${p.pause||0}min</td><td class="text-cyan-300">${fmtMin(travRaw)}<span class="text-[8px] text-white/40 block">eff ${fmtMin(trav)}</span></td><td class="text-amber-300">${gratuitH?fmtMin(gratuitH):'-'}${gDetailH.avant?'<span class="text-[8px] block">Av '+fmtMin(gDetailH.avant)+'</span>':''}${gDetailH.apres?'<span class="text-[8px] block">Ap '+fmtMin(gDetailH.apres)+'</span>':''}</td><td class="${ecart>=0?'text-emerald-400':'text-red-400'}">${ecart?fmtMin(ecart):''}</td><td>${abs?abs.type:''}</td><td><button class="delPointageHist w-6 h-6 rounded-full bg-red-500/15 border border-red-500/30 text-red-300 text-[10px] font-bold hover:bg-red-500/30" data-iso="${iso}" title="Supprimer ${iso}">✕</button></td></tr>`;
 });
 const tableEl=document.querySelector('#tableHist');
 if(tableEl) tableEl.innerHTML=rows || '<tr><td colspan="10" class="py-6 text-center text-white/30">Aucun pointage</td></tr>';
@@ -1524,9 +1686,35 @@ function download(text, name){ const a=document.createElement('a'); a.href=URL.c
 
 
 
+function updateToleranceDisplay(){
+  const avant = data.toleranceAvant||0;
+  const apres = data.toleranceApres||0;
+  const avantEl=document.querySelector('#tolAvantSlider'); if(avantEl) avantEl.value=avant;
+  const apresEl=document.querySelector('#tolApresSlider'); if(apresEl) apresEl.value=apres;
+  const avantDisp=document.querySelector('#tolAvantDisplay'); if(avantDisp) avantDisp.textContent = avant===0?'0min' : (avant<60? avant+'min' : fmtMin2(avant));
+  const apresDisp=document.querySelector('#tolApresDisplay'); if(apresDisp) apresDisp.textContent = apres===0?'0min' : (apres<60? apres+'min' : fmtMin2(apres));
+  document.querySelectorAll('.presetTolAvant').forEach(b=>{
+    const isActive = parseInt(b.dataset.min)===avant;
+    b.className = isActive ? 'presetTolAvant px-3 py-1 rounded-full bg-cyan-500/30 border border-cyan-500/50 text-xs mono' : 'presetTolAvant px-3 py-1 rounded-full bg-white/10 text-xs mono';
+  });
+  document.querySelectorAll('.presetTolApres').forEach(b=>{
+    const isActive = parseInt(b.dataset.min)===apres;
+    b.className = isActive ? 'presetTolApres px-3 py-1 rounded-full bg-orange-500/30 border border-orange-500/50 text-xs mono' : 'presetTolApres px-3 py-1 rounded-full bg-white/10 text-xs mono';
+  });
+}
+function setToleranceAvant(v){
+  data.toleranceAvant=Math.max(0, Math.min(120, parseInt(v)||0));
+  updateToleranceDisplay(); save(); renderBanque(); renderHeader(); renderHist(); renderPlanning();
+}
+function setToleranceApres(v){
+  data.toleranceApres=Math.max(0, Math.min(120, parseInt(v)||0));
+  updateToleranceDisplay(); save(); renderBanque(); renderHeader(); renderHist(); renderPlanning();
+}
+
 function renderReglages(){
   renderReglagesBase();
   updateMajDisplay();
+  updateToleranceDisplay();
   renderFeriesList();
   const majSlider=document.getElementById('majSlider');
   if(majSlider){
@@ -1546,6 +1734,19 @@ function renderReglages(){
     document.getElementById('customFerieName').value='';
   });
   document.getElementById('restoreFeries')?.addEventListener('click',()=>{ data.suppressedFeries=[]; save(); renderFeriesList(); renderPlanning(); renderBanque(); });
+  // Tolerance sliders
+  const tolAvantSlider=document.getElementById('tolAvantSlider');
+  if(tolAvantSlider){ tolAvantSlider.addEventListener('input', e=> setToleranceAvant(e.target.value)); }
+  document.getElementById('tolAvantMinus')?.addEventListener('click',()=> setToleranceAvant((data.toleranceAvant||0)-1));
+  document.getElementById('tolAvantPlus')?.addEventListener('click',()=> setToleranceAvant((data.toleranceAvant||0)+1));
+  document.querySelectorAll('.presetTolAvant').forEach(b=> b.addEventListener('click',()=> setToleranceAvant(b.dataset.min)));
+
+  const tolApresSlider=document.getElementById('tolApresSlider');
+  if(tolApresSlider){ tolApresSlider.addEventListener('input', e=> setToleranceApres(e.target.value)); }
+  document.getElementById('tolApresMinus')?.addEventListener('click',()=> setToleranceApres((data.toleranceApres||0)-1));
+  document.getElementById('tolApresPlus')?.addEventListener('click',()=> setToleranceApres((data.toleranceApres||0)+1));
+  document.querySelectorAll('.presetTolApres').forEach(b=> b.addEventListener('click',()=> setToleranceApres(b.dataset.min)));
+
 }
 
 // === GESTION FERIES ===
@@ -1672,5 +1873,5 @@ if('serviceWorker' in navigator){
 }
 </script>
 
-<script>(function(){var loc=location.href.replace(/#.*$/,"");var ATTR_NAMES=["data-product-id","data-productid","data-product_id","product-id","productid","product_id","data-source-entity-id","source-entity-id","source_entity_id","data-product","data-metadata","data-meta"];var DATASET_KEYS=["productId","productid","product_id","sourceEntityId","sourceentityid","source_entity_id","product","metadata","meta"];function readProductId(value){if(typeof value!=="string"||value.length===0)return null;if(/^[0-9]{6,}$/.test(value))return value;var match=value.match(/(?:product(?:_|-)?id|source(?:_|-)?entity(?:_|-)?id)["'=:\s]+([0-9]{6,})/i);return match?match[1]:null}function extractProductId(start){for(var node=start;node&&node!==document.body;node=node.parentElement){for(var i=0;i<ATTR_NAMES.length;i++){var attrValue=node.getAttribute&&node.getAttribute(ATTR_NAMES[i]);var attrProductId=readProductId(attrValue);if(attrProductId)return attrProductId}var dataset=node.dataset||null;if(dataset){for(var j=0;j<DATASET_KEYS.length;j++){var dataValue=dataset[DATASET_KEYS[j]];var dataProductId=readProductId(dataValue);if(dataProductId)return dataProductId}}}return null}function isInlineMediaSlotElement(node){return !!(node&&node.getAttribute&&node.getAttribute("data-clippy-inline-media-slot")!==null)}function findInlineMediaSlot(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(isInlineMediaSlotElement(node))return node}return null}function readInlineMediaUrl(node){if(!node)return null;return node.getAttribute&&((node.getAttribute("data-clippy-inline-media-url")||node.getAttribute("data-url")||node.getAttribute("data_url")))||node.href||null}function stripHash(url){return String(url).replace(/#.*$/,"")}function urlsMatch(a,b){if(!a||!b)return false;try{return stripHash(new URL(a,loc).href)===stripHash(new URL(b,loc).href)}catch(_){return stripHash(a)===stripHash(b)}}function isFirstPartyReelUrl(value){try{var url=new URL(value,loc);if(url.protocol!=="https:")return false;var host=url.hostname.toLowerCase();var supported=host==="instagram.com"||host.endsWith(".instagram.com")||host==="facebook.com"||host.endsWith(".facebook.com");return supported&&/\/reels?\//i.test(url.pathname)}catch(_){return false}}function isInlineMediaUrlClick(node,href){var slot=findInlineMediaSlot(node);if(!slot)return false;var slotUrl=readInlineMediaUrl(slot);if(slotUrl)return urlsMatch(href,slotUrl);return isFirstPartyReelUrl(href)}function findDataHref(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(node.getAttribute){var href=node.getAttribute("data-href")||node.getAttribute("data-url");if(href)return{href:href,node:node}}}return null}var nativeOpen=window.open;window.open=function(url){if(parent!==window&&typeof url==="string"&&/^https?:\/\//.test(url)){parent.postMessage({type:"ecto:usercontent-link-click",href:url},"*");return null}return nativeOpen?nativeOpen.apply(window,arguments):null};document.addEventListener("click",function(e){var target=e.target instanceof Element?e.target:null;if(!target)return;if(parent===window)return;var a=target.closest?target.closest("a[href]"):null;if(a&&a.href&&/^https?:\/\//.test(a.href)&&a.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(a,a.href))return;var productId=extractProductId(target)||extractProductId(a);if(productId){e.preventDefault();parent.postMessage({type:"ecto-artifact-link-click",productId:productId},"*");return}e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:a.href},"*");return}var dataHref=findDataHref(target);if(dataHref&&/^https?:\/\//.test(dataHref.href)&&dataHref.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(dataHref.node,dataHref.href))return;e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:dataHref.href},"*")}},true)})();</script><script>(function(){var FOCUS_TYPE="ecto:artifact-focus-request";var CLOSE_TYPE="ecto:artifact-close-request";function focusArtifactDocument(){var body=document.body;if(!body)return;try{window.focus();}catch(e){}if(!body.hasAttribute("tabindex"))body.setAttribute("tabindex","-1");try{body.focus({preventScroll:true});}catch(e){try{body.focus();}catch(e2){}}}window.addEventListener("message",function(event){if(event.source!==window.parent)return;var data=event.data;if(!data||typeof data!=="object"||data.type!==FOCUS_TYPE)return;if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",focusArtifactDocument,{once:true});return;}focusArtifactDocument();});window.addEventListener("keydown",function(event){if(event.key!=="Escape")return;window.setTimeout(function(){if(event.defaultPrevented)return;window.parent.postMessage({type:CLOSE_TYPE},"*");},0);});})();</script></body>
+<script>(function(){var loc=location.href.replace(/#.*$/,"");var ATTR_NAMES=["data-product-id","data-productid","data-product_id","product-id","productid","product_id","data-source-entity-id","source-entity-id","source_entity_id","data-product","data-metadata","data-meta"];var DATASET_KEYS=["productId","productid","product_id","sourceEntityId","sourceentityid","source_entity_id","product","metadata","meta"];function readProductId(value){if(typeof value!=="string"||value.length===0)return null;if(/^[0-9]{6,}$/.test(value))return value;var match=value.match(/(?:product(?:_|-)?id|source(?:_|-)?entity(?:_|-)?id)["'=:\s]+([0-9]{6,})/i);return match?match[1]:null}function extractProductId(start){for(var node=start;node&&node!==document.body;node=node.parentElement){for(var i=0;i<ATTR_NAMES.length;i++){var attrValue=node.getAttribute&&node.getAttribute(ATTR_NAMES[i]);var attrProductId=readProductId(attrValue);if(attrProductId)return attrProductId}var dataset=node.dataset||null;if(dataset){for(var j=0;j<DATASET_KEYS.length;j++){var dataValue=dataset[DATASET_KEYS[j]];var dataProductId=readProductId(dataValue);if(dataProductId)return dataProductId}}}return null}function isInlineMediaSlotElement(node){return !!(node&&node.getAttribute&&node.getAttribute("data-clippy-inline-media-slot")!==null)}function findInlineMediaSlot(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(isInlineMediaSlotElement(node))return node}return null}function readInlineMediaUrl(node){if(!node)return null;return node.getAttribute&&((node.getAttribute("data-clippy-inline-media-url")||node.getAttribute("data-url")||node.getAttribute("data_url")))||node.href||null}function stripHash(url){return String(url).replace(/#.*$/,"")}function urlsMatch(a,b){if(!a||!b)return false;try{return stripHash(new URL(a,loc).href)===stripHash(new URL(b,loc).href)}catch(_){return stripHash(a)===stripHash(b)}}function isFirstPartyReelUrl(value){try{var url=new URL(value,loc);if(url.protocol!=="https:")return false;var host=url.hostname.toLowerCase();var supported=host==="instagram.com"||host.endsWith(".instagram.com")||host==="facebook.com"||host.endsWith(".facebook.com");return supported&&/\/reels?\//i.test(url.pathname)}catch(_){return false}}function isInlineMediaUrlClick(node,href){var slot=findInlineMediaSlot(node);if(!slot)return false;var slotUrl=readInlineMediaUrl(slot);if(slotUrl)return urlsMatch(href,slotUrl);return isFirstPartyReelUrl(href)}function findDataHref(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(node.getAttribute){var href=node.getAttribute("data-href")||node.getAttribute("data-url");if(href)return{href:href,node:node}}}return null}var nativeOpen=window.open;window.open=function(url){if(parent!==window&&typeof url==="string"&&/^https?:\/\//.test(url)){parent.postMessage({type:"ecto:usercontent-link-click",href:url},"*");return null}return nativeOpen?nativeOpen.apply(window,arguments):null};document.addEventListener("click",function(e){var target=e.target instanceof Element?e.target:null;if(!target)return;if(parent===window)return;var a=target.closest?target.closest("a[href]"):null;if(a&&a.href&&/^https?:\/\//.test(a.href)&&a.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(a,a.href))return;var productId=extractProductId(target)||extractProductId(a);if(productId){e.preventDefault();parent.postMessage({type:"ecto-artifact-link-click",productId:productId},"*");return}e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:a.href},"*");return}var dataHref=findDataHref(target);if(dataHref&&/^https?:\/\//.test(dataHref.href)&&dataHref.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(dataHref.node,dataHref.href))return;e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:dataHref.href},"*")}},true)})();</script><script>(function(){var FOCUS_TYPE="ecto:artifact-focus-request";var CLOSE_TYPE="ecto:artifact-close-request";function focusArtifactDocument(){var body=document.body;if(!body)return;try{window.focus();}catch(e){}if(!body.hasAttribute("tabindex"))body.setAttribute("tabindex","-1");try{body.focus({preventScroll:true});}catch(e){try{body.focus();}catch(e2){}}}window.addEventListener("message",function(event){if(event.source!==window.parent)return;var data=event.data;if(!data||typeof data!=="object"||data.type!==FOCUS_TYPE)return;if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",focusArtifactDocument,{once:true});return;}focusArtifactDocument();});window.addEventListener("keydown",function(event){if(event.key!=="Escape")return;window.setTimeout(function(){if(event.defaultPrevented)return;window.parent.postMessage({type:CLOSE_TYPE},"*");},0);});})();</script><script>(function(){var loc=location.href.replace(/#.*$/,"");var ATTR_NAMES=["data-product-id","data-productid","data-product_id","product-id","productid","product_id","data-source-entity-id","source-entity-id","source_entity_id","data-product","data-metadata","data-meta"];var DATASET_KEYS=["productId","productid","product_id","sourceEntityId","sourceentityid","source_entity_id","product","metadata","meta"];function readProductId(value){if(typeof value!=="string"||value.length===0)return null;if(/^[0-9]{6,}$/.test(value))return value;var match=value.match(/(?:product(?:_|-)?id|source(?:_|-)?entity(?:_|-)?id)["'=:\s]+([0-9]{6,})/i);return match?match[1]:null}function extractProductId(start){for(var node=start;node&&node!==document.body;node=node.parentElement){for(var i=0;i<ATTR_NAMES.length;i++){var attrValue=node.getAttribute&&node.getAttribute(ATTR_NAMES[i]);var attrProductId=readProductId(attrValue);if(attrProductId)return attrProductId}var dataset=node.dataset||null;if(dataset){for(var j=0;j<DATASET_KEYS.length;j++){var dataValue=dataset[DATASET_KEYS[j]];var dataProductId=readProductId(dataValue);if(dataProductId)return dataProductId}}}return null}function isInlineMediaSlotElement(node){return !!(node&&node.getAttribute&&node.getAttribute("data-clippy-inline-media-slot")!==null)}function findInlineMediaSlot(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(isInlineMediaSlotElement(node))return node}return null}function readInlineMediaUrl(node){if(!node)return null;return node.getAttribute&&((node.getAttribute("data-clippy-inline-media-url")||node.getAttribute("data-url")||node.getAttribute("data_url")))||node.href||null}function stripHash(url){return String(url).replace(/#.*$/,"")}function urlsMatch(a,b){if(!a||!b)return false;try{return stripHash(new URL(a,loc).href)===stripHash(new URL(b,loc).href)}catch(_){return stripHash(a)===stripHash(b)}}function isFirstPartyReelUrl(value){try{var url=new URL(value,loc);if(url.protocol!=="https:")return false;var host=url.hostname.toLowerCase();var supported=host==="instagram.com"||host.endsWith(".instagram.com")||host==="facebook.com"||host.endsWith(".facebook.com");return supported&&/\/reels?\//i.test(url.pathname)}catch(_){return false}}function isInlineMediaUrlClick(node,href){var slot=findInlineMediaSlot(node);if(!slot)return false;var slotUrl=readInlineMediaUrl(slot);if(slotUrl)return urlsMatch(href,slotUrl);return isFirstPartyReelUrl(href)}function findDataHref(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(node.getAttribute){var href=node.getAttribute("data-href")||node.getAttribute("data-url");if(href)return{href:href,node:node}}}return null}var nativeOpen=window.open;window.open=function(url){if(parent!==window&&typeof url==="string"&&/^https?:\/\//.test(url)){parent.postMessage({type:"ecto:usercontent-link-click",href:url},"*");return null}return nativeOpen?nativeOpen.apply(window,arguments):null};document.addEventListener("click",function(e){var target=e.target instanceof Element?e.target:null;if(!target)return;if(parent===window)return;var a=target.closest?target.closest("a[href]"):null;if(a&&a.href&&/^https?:\/\//.test(a.href)&&a.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(a,a.href))return;var productId=extractProductId(target)||extractProductId(a);if(productId){e.preventDefault();parent.postMessage({type:"ecto-artifact-link-click",productId:productId},"*");return}e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:a.href},"*");return}var dataHref=findDataHref(target);if(dataHref&&/^https?:\/\//.test(dataHref.href)&&dataHref.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(dataHref.node,dataHref.href))return;e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:dataHref.href},"*")}},true)})();</script><script>(function(){var FOCUS_TYPE="ecto:artifact-focus-request";var CLOSE_TYPE="ecto:artifact-close-request";function focusArtifactDocument(){var body=document.body;if(!body)return;try{window.focus();}catch(e){}if(!body.hasAttribute("tabindex"))body.setAttribute("tabindex","-1");try{body.focus({preventScroll:true});}catch(e){try{body.focus();}catch(e2){}}}window.addEventListener("message",function(event){if(event.source!==window.parent)return;var data=event.data;if(!data||typeof data!=="object"||data.type!==FOCUS_TYPE)return;if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",focusArtifactDocument,{once:true});return;}focusArtifactDocument();});window.addEventListener("keydown",function(event){if(event.key!=="Escape")return;window.setTimeout(function(){if(event.defaultPrevented)return;window.parent.postMessage({type:CLOSE_TYPE},"*");},0);});})();</script></body>
 </html>
