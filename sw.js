@@ -1,4 +1,4 @@
-const CACHE_NAME = 'shiftpilot-v21-tolerance-1min-week-fix';
+const CACHE_NAME = 'shiftpilot-v23-roulements-periodes';
 const ASSETS = [
   './',
   './index.html',

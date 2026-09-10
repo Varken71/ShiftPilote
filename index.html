@@ -214,72 +214,42 @@ body{font-family:Inter,sans-serif;background:#0a0e13;color:#e2e8f0}
 </div>
 </div>
 
-<!-- TAB BANQUE HS -->
+<!-- TAB BANQUE HS - PÉRIODE PERSONNALISABLE -->
 <div id="tab-banque" class="tab hidden">
 <div class="glass rounded-[20px] p-5 mb-4">
-<div class="flex justify-between items-center">
-<h2 class="font-extrabold">BANQUE HEURES SUP</h2>
-<div class="flex bg-white/10 rounded-full p-1">
-<button id="modeMensuel" class="px-4 py-1.5 rounded-full text-xs font-bold bg-white text-black">MENSUEL</button>
-<button id="modeAnnuel" class="px-4 py-1.5 rounded-full text-xs font-bold">ANNUEL</button>
-</div>
+<div class="flex justify-between items-center flex-wrap gap-3">
+<h2 class="font-extrabold tracking-widest">BANQUE HEURES SUP</h2>
+<div id="periodeLabel" class="text-[10px] mono px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">01/01/2026 - 31/12/2026</div>
 </div>
 
-<div id="banqueMensuel" class="">
-<div class="mt-4 grid md:grid-cols-3 gap-3">
-<div class="glass rounded-2xl p-4 text-center">
-<div class="text-[10px] mono text-white/40">THÉORIQUE TOTAL MOIS</div>
-<div id="theoriqueMois" class="text-xl font-bold mono text-white/60">0h00</div>
-<div class="text-[9px] mono text-white/30 mt-1">tout le mois</div>
-<div id="moisName" class="text-xs mono mt-1">Septembre 2026</div>
+<div class="mt-5 glass rounded-2xl p-4 border-white/10">
+<div class="flex justify-between items-center mb-3">
+<span class="text-[10px] mono text-white/40 tracking-widest">📅 PÉRIODE PERSONNALISABLE</span>
+<span class="text-[9px] mono text-white/30">Actualisation auto</span>
 </div>
-<div class="glass rounded-2xl p-4 text-center border-cyan-500/20">
-<div class="text-[10px] mono text-white/40">THÉORIQUE DÛ À CE JOUR</div>
-<div id="theoriqueDuMois" class="text-xl font-bold mono text-amber-300">0h00</div>
-<div class="text-[9px] mono text-white/30 mt-1">jusqu'à aujourd'hui</div>
-<div class="mt-2 pt-2 border-t border-white/5">
-<div class="text-[9px] mono text-white/40">RÉALISÉ</div>
-<div id="realiseMois" class="text-lg font-bold mono text-white">0h00</div>
+<div class="grid grid-cols-2 gap-3">
+<label class="text-[10px] mono text-white/60">Date de début
+<input id="periodeDebut" type="date" class="w-full mt-1.5 bg-black/30 rounded-xl p-3 mono text-sm border border-white/10 focus:border-cyan-500/50 outline-none focus:bg-white/10 transition">
+</label>
+<label class="text-[10px] mono text-white/60">Date de fin
+<input id="periodeFin" type="date" class="w-full mt-1.5 bg-black/30 rounded-xl p-3 mono text-sm border border-white/10 focus:border-cyan-500/50 outline-none focus:bg-white/10 transition">
+</label>
 </div>
-</div>
-<div class="glass rounded-2xl p-4 text-center bg-cyan-500/5 border-cyan-500/20">
-<div class="text-[10px] mono text-white/40">HS ACTUEL (futur supposé fait)</div>
-<div id="soldeMois" class="text-3xl font-extrabold mono text-cyan-400">+0h00</div>
-<div id="hsDetailMois" class="text-[10px] mono text-white/40 mt-1">Réalisé - Dû</div>
-</div>
-</div>
-<div class="mt-3 glass rounded-2xl p-4">
-<h4 class="text-xs mono font-bold mb-2">12 DERNIERS MOIS - Théorique vs Réalisé</h4>
-<div class="mt-3 glass rounded-2xl p-4 border-amber-500/20">
-<div class="flex justify-between items-center">
-<div>
-<div class="text-[10px] mono text-white/40">HEURES GRATUITES (non comptées HS)</div>
-<div id="gratuitMois" class="text-xl font-bold mono text-amber-300">0h00</div>
-<div class="text-[9px] mono text-white/30 mt-1">Avant: <span id="gratuitAvantMois">0h00</span> • Après: <span id="gratuitApresMois">0h00</span> • Total offert</div>
-</div>
-<div class="text-right">
-<div class="text-[10px] mono text-white/40">Détail</div>
-<div id="gratuitDetailMois" class="text-[10px] mono text-white/60">-</div>
+<div class="mt-4 flex flex-wrap gap-2">
+<button class="presetPeriode px-3 py-1.5 rounded-full bg-white/10 text-[10px] mono font-bold hover:bg-white/20 transition" data-preset="thisMonth">CE MOIS</button>
+<button class="presetPeriode px-3 py-1.5 rounded-full bg-white/10 text-[10px] mono font-bold hover:bg-white/20 transition" data-preset="lastMonth">MOIS DERNIER</button>
+<button class="presetPeriode px-3 py-1.5 rounded-full bg-white/10 text-[10px] mono font-bold hover:bg-white/20 transition" data-preset="last3Months">3 DERNIERS MOIS</button>
+<button class="presetPeriode px-3 py-1.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 text-[10px] mono font-bold hover:bg-cyan-500/30 transition" data-preset="thisYear">ANNÉE EN COURS</button>
+<button class="presetPeriode px-3 py-1.5 rounded-full bg-white/10 text-[10px] mono font-bold hover:bg-white/20 transition" data-preset="lastYear">ANNÉE DERNIÈRE</button>
+<button class="presetPeriode px-3 py-1.5 rounded-full bg-white/10 text-[10px] mono font-bold hover:bg-white/20 transition" data-preset="all">TOUT</button>
 </div>
 </div>
-</div>
-<div id="listMois" class="space-y-1 max-h-64 overflow-auto"></div>
-</div>
-</div>
-
-<div id="banqueAnnuel" class="hidden">
-<div class="mt-4 grid md:grid-cols-2 gap-3">
-<label class="text-[10px] mono">Début période<input id="periodeDebut" type="date" class="w-full mt-1 bg-white/10 rounded-lg p-2 mono"></label>
-<label class="text-[10px] mono">Fin période<input id="periodeFin" type="date" class="w-full mt-1 bg-white/10 rounded-lg p-2 mono"></label>
-</div>
-<button id="applyPeriode" class="mt-3 w-full py-2 rounded-xl bg-cyan-500 text-black font-bold text-xs">APPLIQUER PÉRIODE</button>
 
 <div class="mt-4 grid md:grid-cols-3 gap-3">
-<div class="glass rounded-2xl p-5 text-center border-cyan-500/30">
-<div class="text-[10px] mono text-white/40">SOLDE BANQUE ANNUELLE</div>
-<div id="soldeAnnuel" class="text-4xl font-extrabold mono text-cyan-400">+0h00</div>
-<div id="periodeLabel" class="text-[10px] mono mt-1 text-white/50">01/01/2026 - 31/12/2026</div>
-<div class="mt-3 pt-3 border-t border-white/10 grid grid-cols-2 gap-2 text-[10px] mono">
+<div class="glass rounded-2xl p-5 text-center border-cyan-500/30 bg-cyan-500/5">
+<div class="text-[10px] mono text-white/40 tracking-widest">SOLDE SUR PÉRIODE</div>
+<div id="soldeAnnuel" class="text-4xl font-extrabold mono text-cyan-400 mt-1">+0h00</div>
+<div class="mt-3 pt-3 border-t border-white/10 grid grid-cols-2 gap-2 text-[10px] mono text-left">
 <div><span class="text-white/40">Théo total période</span><div id="theoriqueAnnuel" class="font-bold text-white/70">0h00</div></div>
 <div><span class="text-white/40">Réalisé total</span><div id="realiseAnnuel" class="font-bold text-white">0h00</div></div>
 <div><span class="text-amber-300/60">Théo dû à ce jour</span><div id="theoriqueDuAnnuel" class="font-bold text-amber-300">0h00</div></div>
@@ -288,35 +258,42 @@ body{font-family:Inter,sans-serif;background:#0a0e13;color:#e2e8f0}
 </div>
 <div class="glass rounded-2xl p-4">
 <div class="grid grid-cols-2 gap-3">
-<div><div class="text-[9px] mono text-white/40">THÉORIQUE</div><div id="theoriqueAnnuel2" class="font-bold mono text-white/60 text-sm">0h00</div></div>
-<div><div class="text-[9px] mono text-white/40">RÉALISÉ</div><div id="realiseAnnuel2" class="font-bold mono text-white text-sm">0h00</div></div>
+<div><div class="text-[9px] mono text-white/40">THÉORIQUE PÉRIODE</div><div id="theoriqueAnnuel2" class="font-bold mono text-white/60 text-sm">0h00</div></div>
+<div><div class="text-[9px] mono text-white/40">RÉALISÉ PÉRIODE</div><div id="realiseAnnuel2" class="font-bold mono text-white text-sm">0h00</div></div>
 </div>
-<div class="mt-3 pt-3 border-t border-white/5">
-<div class="text-[10px] mono">Sup acquises (Réalisé - Théorique)</div><div id="supAcquises" class="font-bold mono text-emerald-400">+0h00</div>
-<div class="text-[10px] mono mt-2">Récup posées</div><div id="recupPosees" class="font-bold mono text-violet-400">-0h00</div>
-<div class="text-[10px] mono mt-2">Heures Gratuites</div><div id="gratuitAnnuel" class="font-bold mono text-amber-400">0h00</div>
-<div class="text-[9px] mono text-white/30">Avant <span id="gratuitAvantAnnuel">0h00</span> • Après <span id="gratuitApresAnnuel">0h00</span></div>
-<div class="border-t border-white/10 mt-2 pt-2 flex justify-between font-bold mono"><span>Solde HS</span><span id="soldeFinal">+0h00</span></div>
+<div class="mt-3 pt-3 border-t border-white/5 space-y-2">
+<div class="flex justify-between"><span class="text-[10px] mono">Sup acquises</span><span id="supAcquises" class="font-bold mono text-emerald-400 text-xs">+0h00</span></div>
+<div class="flex justify-between"><span class="text-[10px] mono">Récup posées</span><span id="recupPosees" class="font-bold mono text-violet-400 text-xs">-0h00</span></div>
+<div class="flex justify-between"><span class="text-[10px] mono">Heures Gratuites</span><span id="gratuitAnnuel" class="font-bold mono text-amber-400 text-xs">0h00</span></div>
+<div class="text-[9px] mono text-white/30 -mt-1">Avant <span id="gratuitAvantAnnuel">0h00</span> • Après <span id="gratuitApresAnnuel">0h00</span></div>
+<div class="border-t border-white/10 mt-2 pt-2 flex justify-between font-bold mono text-sm"><span>Solde HS</span><span id="soldeFinal">+0h00</span></div>
 </div>
 </div>
 <div class="glass rounded-2xl p-4">
-<h4 class="text-[10px] mono font-bold mb-2">RÉPARTITION MENSUELLE</h4>
+<h4 class="text-[10px] mono font-bold mb-3 tracking-widest">RÉPARTITION MENSUELLE</h4>
 <div id="barChart" class="flex items-end gap-1 h-20"></div>
-<div id="barLabels" class="flex gap-1 text-[8px] mono mt-1"></div>
+<div id="barLabels" class="flex gap-1 text-[8px] mono mt-1 text-white/40"></div>
+<div class="mt-3 pt-3 border-t border-white/5 text-[9px] mono text-white/30">
+<span id="nbJoursPeriode">0 jours</span> dans la période • <span id="nbPointagesPeriode">0 pointages</span>
+</div>
 </div>
 </div>
 
 <div class="mt-4 glass rounded-2xl p-4 overflow-auto">
+<div class="flex justify-between items-center mb-2">
+<h4 class="text-[10px] mono font-bold tracking-widest">DÉTAIL JOURNALIER SUR PÉRIODE</h4>
+<span class="text-[9px] mono text-white/30">50 derniers</span>
+</div>
 <table class="w-full text-[11px] mono">
-<thead><tr class="text-white/40"><th class="text-left py-1">Date</th><th>Type</th><th>Sup</th><th>Récup</th><th>Gratuit</th><th>Solde cumulé</th></tr></thead>
+<thead><tr class="text-white/40 text-[9px]"><th class="text-left py-1.5 font-normal">Date</th><th class="text-left py-1.5 font-normal">Type</th><th class="text-left py-1.5 font-normal">Sup</th><th class="text-left py-1.5 font-normal">Récup</th><th class="text-left py-1.5 font-normal">Gratuit</th><th class="text-right py-1.5 font-normal">Solde cumulé</th></tr></thead>
 <tbody id="tableBanque"></tbody>
 </table>
 </div>
-<button id="exportBanque" class="mt-3 px-4 py-2 rounded-xl bg-white/10 font-bold text-xs mono">EXPORT CSV BANQUE</button>
+<button id="exportBanque" class="mt-3 px-4 py-2 rounded-xl bg-white/10 font-bold text-xs mono hover:bg-white/20 transition">EXPORT CSV BANQUE</button>
 </div>
 
 </div>
-</div>
+
 
 <!-- TAB HISTORIQUE -->
 <div id="tab-historique" class="tab hidden">
@@ -505,14 +482,36 @@ body{font-family:Inter,sans-serif;background:#0a0e13;color:#e2e8f0}
 </div>
 </div>
 
-<div class="glass rounded-2xl p-5">
-<h3 class="font-bold mono mb-3">MON ROULEMENT</h3>
-<div class="flex gap-2 mb-3">
-<label class="text-[10px] mono">Début cycle<input id="cycleStart" type="date" class="ml-2 bg-white/10 rounded-lg p-1 mono text-xs"></label>
+<div class="glass rounded-2xl p-5 border-cyan-500/20">
+<h3 class="font-bold mono mb-3">MON ROULEMENT PAR PÉRIODES <span class="text-[9px] px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300">NOUVEAU</span></h3>
+<p class="text-[10px] mono text-white/50 mb-4 leading-relaxed">Ajoute une période quand tes horaires changent. L'ancien planning reste intact. Si les périodes se chevauchent, la plus récente (date de début la plus tardive) est utilisée.</p>
+<div id="listRoulements" class="space-y-3"></div>
+<button id="addRoulement" class="mt-4 w-full py-3 rounded-xl bg-cyan-500/20 border border-cyan-500/30 text-cyan-300 font-bold text-xs hover:bg-cyan-500/30 transition">+ AJOUTER UNE PÉRIODE DE ROULEMENT</button>
+
+<div id="roulementForm" class="hidden mt-4 p-4 rounded-xl bg-black/40 border border-white/10 backdrop-blur">
+  <h4 id="roulementFormTitle" class="text-xs mono font-bold mb-3 tracking-widest">NOUVELLE PÉRIODE</h4>
+  <div class="grid grid-cols-2 gap-2">
+    <label class="text-[10px] mono col-span-2">Nom de la période<input id="roulementNom" placeholder="Ex: Roulement été 2026 / Nouveau cycle" class="w-full mt-1 bg-white/10 rounded-lg p-2.5 mono text-xs border border-white/10"></label>
+    <label class="text-[10px] mono">Début période*<input id="roulementDebut" type="date" class="w-full mt-1 bg-white/10 rounded-lg p-2.5 mono text-xs border border-white/10"></label>
+    <label class="text-[10px] mono">Fin période (optionnel)<input id="roulementFin" type="date" class="w-full mt-1 bg-white/10 rounded-lg p-2.5 mono text-xs border border-white/10"></label>
+  </div>
+  <div class="mt-2 text-[9px] mono text-white/40">Le cycle recommence automatiquement au début de la période.</div>
+  <div class="mt-4">
+    <div class="flex justify-between items-center mb-1">
+      <span class="text-[10px] mono text-white/40 tracking-widest">CYCLE DE ROULEMENT</span>
+      <span class="text-[9px] mono text-white/30" id="roulementCycleLength">0 jours</span>
+    </div>
+    <div id="roulementCycleDisplay" class="flex flex-wrap gap-1 mb-2 min-h-[40px] p-3 rounded-xl bg-white/5 border border-white/10"></div>
+    <div class="text-[9px] mono text-white/30 mb-2">Clique sur un horaire pour l'ajouter au cycle :</div>
+    <div id="roulementCycleButtons" class="flex flex-wrap gap-1.5"></div>
+    <button id="roulementClearCycle" class="mt-3 px-3 py-1 rounded-full bg-red-500/20 border border-red-500/30 text-red-300 text-[10px] mono hover:bg-red-500/30">EFFACER CYCLE</button>
+  </div>
+  <div class="mt-5 flex gap-2">
+    <button id="saveRoulement" class="flex-1 py-3 rounded-xl bg-cyan-500 text-black font-bold text-xs hover:bg-cyan-400">ENREGISTRER PÉRIODE</button>
+    <button id="cancelRoulement" class="px-5 py-3 rounded-xl bg-white/10 text-xs font-bold hover:bg-white/20">ANNULER</button>
+  </div>
+  <input type="hidden" id="roulementEditId" value="">
 </div>
-<div id="cycleDisplay" class="flex flex-wrap gap-1 mb-3"></div>
-<div class="flex gap-1 flex-wrap" id="cycleButtons"></div>
-<button id="clearCycle" class="mt-3 px-3 py-1 rounded-full bg-red-500/20 text-xs mono">EFFACER CYCLE</button>
 </div>
 
 <div class="glass rounded-2xl p-5">
@@ -701,6 +700,38 @@ toleranceApres:10,
 seuilHS:2100
 };
 function save(){ localStorage.setItem('pointeuseV4', JSON.stringify(data)); }
+
+
+// === MIGRATION ROULEMENTS PAR PÉRIODES ===
+(function migrateRoulements(){
+  if(!data.roulements){
+    if(data.cycle && data.cycle.length){
+      data.roulements = [{
+        id: 'r_'+Date.now(),
+        nom: 'Roulement initial',
+        debut: data.cycleStart || isoDate(new Date()),
+        fin: null,
+        cycle: [...data.cycle],
+        cycleStart: data.cycleStart || isoDate(new Date())
+      }];
+    }else{
+      data.roulements = [];
+    }
+    // garde ancien cycle pour compat mais ne sera plus utilisé directement
+    save();
+  }
+  // assure que chaque roulement a un id et cycleStart
+  let changed=false;
+  data.roulements.forEach(r=>{
+    if(!r.id){ r.id='r_'+Math.random().toString(36).slice(2,9); changed=true; }
+    if(!r.cycleStart) { r.cycleStart=r.debut; changed=true; }
+    if(!r.nom) { r.nom='Roulement'; changed=true; }
+    if(r.fin==='') r.fin=null;
+  });
+  if(changed) save();
+})();
+let tempRoulementCycle = [];
+
 
 
 // === FIX PAUSE: Audio & Alert System ===
@@ -999,13 +1030,38 @@ let prevDep=parseHM(prev.depart); let currArr=parseHM(curr.arrivee);
 const d1=new Date(prevIso); const d2=new Date(currIso); const diff=diffDays(d2,d1);
 return diff*1440 + currArr - prevDep;
 }
+function getRoulementForDate(date){
+  if(!data.roulements || !data.roulements.length) return null;
+  const iso = isoDate(date);
+  const sorted = [...data.roulements].sort((a,b)=> a.debut.localeCompare(b.debut));
+  let candidate = null;
+  for(let r of sorted){
+    if(iso >= r.debut && (!r.fin || iso <= r.fin)){
+      if(!candidate || r.debut > candidate.debut) candidate = r;
+    }
+  }
+  // Si aucune période ne couvre la date (ex: après une fin), on retourne null => R
+  return candidate;
+}
+
 function getPosteForDate(date){
-if(!data.cycle.length) return 'R';
-const parts=data.cycleStart.split('-');
-const start=new Date(parseInt(parts[0]),parseInt(parts[1])-1,parseInt(parts[2]));
-const diff=diffDays(date,start);
-if(diff<0) return 'R';
-return data.cycle[diff % data.cycle.length];
+  const roulement = getRoulementForDate(date);
+  if(roulement && roulement.cycle && roulement.cycle.length){
+    // Début cycle = début période (simplifié)
+    const cs = roulement.debut;
+    const parts=cs.split('-');
+    const start=new Date(parseInt(parts[0]),parseInt(parts[1])-1,parseInt(parts[2]));
+    const diff=diffDays(date,start);
+    if(diff<0) return roulement.cycle[0] || 'R';
+    return roulement.cycle[diff % roulement.cycle.length];
+  }
+  // fallback ancien système
+  if(!data.cycle || !data.cycle.length) return 'R';
+  const parts=data.cycleStart.split('-');
+  const start=new Date(parseInt(parts[0]),parseInt(parts[1])-1,parseInt(parts[2]));
+  const diff=diffDays(date,start);
+  if(diff<0) return 'R';
+  return data.cycle[diff % data.cycle.length];
 }
 
 // Pointeuse actions
@@ -1189,7 +1245,6 @@ const overStop=document.querySelector('#overlayStopSound'); if(overStop) overSto
 // Postes & Cycle
 function renderReglagesBase(){
 updateObjDisplay(); updatePauseDisplay();
-const csEl=document.querySelector('#cycleStart'); if(csEl) csEl.value=data.cycleStart;
 let html='';
 data.postes.forEach(p=>{
   const safeCouleur = p.couleur || 'bg-white/10 border-white/20 text-white/60';
@@ -1235,9 +1290,13 @@ if(listEl) listEl.innerHTML=html || '<div class="text-xs text-white/40 mono p-3"
 
 document.querySelectorAll('.delPoste').forEach(b=>b.addEventListener('click',()=>{
   const id=b.dataset.id;
-  if(confirm('Supprimer l\'horaire '+id+' ?')){
+  if(confirm('Supprimer l\'horaire '+id+' ? Il sera aussi retiré de tous les roulements.')){
     data.postes=data.postes.filter(x=>x.id!==id);
+    // nettoie ancien cycle et tous les roulements
     data.cycle=data.cycle.filter(c=>c!==id);
+    if(data.roulements){
+      data.roulements.forEach(r=>{ r.cycle = r.cycle.filter(c=>c!==id); });
+    }
     save(); renderReglages(); renderPlanning();
   }
 }));
@@ -1263,8 +1322,6 @@ document.querySelectorAll('.saveEditPoste').forEach(b=>b.addEventListener('click
   const newDebut = debutEl ? parseHM(debutEl.value) : data.postes[idx].debut;
   const newFin = finEl ? parseHM(finEl.value) : data.postes[idx].fin;
   const newCouleur = couleurEl ? couleurEl.value : data.postes[idx].couleur;
-  // Si le nom change, on garde le même ID pour ne pas casser le cycle, mais on permet changement de lettre via première lettre ?
-  // On garde ID existant
   data.postes[idx].nom = newNom;
   data.postes[idx].debut = newDebut;
   data.postes[idx].fin = newFin;
@@ -1272,15 +1329,139 @@ document.querySelectorAll('.saveEditPoste').forEach(b=>b.addEventListener('click
   save(); renderReglages(); renderPlanning(); renderHeader();
 }));
 
-let cHtml='';
-data.cycle.forEach((id,i)=>{ const poste=data.postes.find(x=>x.id===id); const col=poste?poste.couleur:'bg-white/10 border-white/20'; cHtml+=`<span class="px-2 py-1 rounded-full text-xs font-bold mono border ${col}">${id}</span>`; });
-const cycleDisplayEl=document.querySelector('#cycleDisplay');
-if(cycleDisplayEl) cycleDisplayEl.innerHTML=cHtml||'<span class="text-xs text-white/40">Aucun cycle - ajoute des horaires</span>';
-let btns='';
-data.postes.forEach(p=>{ btns+=`<button class="addCycle px-3 py-1 rounded-full bg-white/10 text-xs mono font-bold border ${p.couleur}" data-id="${p.id}">${p.id}</button>`; });
-const cycleBtnsEl=document.querySelector('#cycleButtons');
-if(cycleBtnsEl) cycleBtnsEl.innerHTML=btns;
-document.querySelectorAll('.addCycle').forEach(b=>b.addEventListener('click',()=>{ data.cycle.push(b.dataset.id); save(); renderReglages(); }));
+renderRoulements();
+}
+
+function renderRoulements(){
+  const container = document.querySelector('#listRoulements');
+  if(!container) return;
+  if(!data.roulements || data.roulements.length===0){
+    container.innerHTML = '<div class="text-[11px] mono text-white/40 p-4 text-center border border-dashed border-white/10 rounded-xl">Aucune période de roulement.<br>Ajoute ta première période ci-dessous.</div>';
+    return;
+  }
+  const sorted = [...data.roulements].sort((a,b)=> b.debut.localeCompare(a.debut));
+  let html='';
+  sorted.forEach(r=>{
+    const cycleStr = r.cycle && r.cycle.length ? r.cycle.join(' ') : '<span class="text-white/30">vide</span>';
+    const nbJours = r.cycle ? r.cycle.length : 0;
+    const finLabel = r.fin ? r.fin.split('-').reverse().join('/') : '∞ en cours';
+    const debutLabel = r.debut.split('-').reverse().join('/');
+    // aperçu visuel cycle
+    let cycleVis='';
+    if(r.cycle){
+      r.cycle.forEach(id=>{
+        const p=data.postes.find(x=>x.id===id);
+        const col = p ? p.couleur : 'bg-white/10 border-white/20';
+        cycleVis+=`<span class="px-2 py-1 rounded-full text-[10px] font-bold mono border ${col}">${id}</span>`;
+      });
+    }
+    html+=`<div class="glass rounded-xl p-3 border border-white/10 hover:border-cyan-500/30 transition">
+      <div class="flex justify-between items-start gap-2">
+        <div class="flex-1">
+          <div class="flex items-center gap-2">
+            <span class="font-bold mono text-xs">${r.nom || 'Roulement'}</span>
+            <span class="text-[9px] px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">${nbJours}j</span>
+          </div>
+          <div class="mt-1 text-[10px] mono text-white/50">📅 ${debutLabel} → ${finLabel} • cycle recommence le ${debutLabel}</div>
+          <div class="mt-2 flex flex-wrap gap-1">${cycleVis || '<span class="text-[10px] text-white/30">Aucun cycle défini</span>'}</div>
+          <div class="mt-1 text-[9px] mono text-white/30">${cycleStr}</div>
+        </div>
+        <div class="flex flex-col gap-1">
+          <button class="editRoulement w-7 h-7 rounded-full bg-white/10 border border-white/10 text-[11px] hover:bg-white/20" data-id="${r.id}" title="Modifier">✏️</button>
+          <button class="delRoulement w-7 h-7 rounded-full bg-red-500/15 border border-red-500/30 text-red-300 text-[11px] hover:bg-red-500/30" data-id="${r.id}" title="Supprimer">🗑️</button>
+        </div>
+      </div>
+    </div>`;
+  });
+  container.innerHTML = html;
+
+  // listeners edit / delete
+  container.querySelectorAll('.editRoulement').forEach(b=>{
+    b.addEventListener('click',()=> openRoulementForm(b.dataset.id));
+  });
+  container.querySelectorAll('.delRoulement').forEach(b=>{
+    b.addEventListener('click',()=>{
+      const id=b.dataset.id;
+      const r=data.roulements.find(x=>x.id===id);
+      if(!r) return;
+      if(confirm('Supprimer la période "'+r.nom+'" du '+r.debut+' ?\nL\'historique avant cette période restera en R.')){
+        data.roulements = data.roulements.filter(x=>x.id!==id);
+        save(); renderReglages(); renderPlanning(); renderBanque();
+      }
+    });
+  });
+}
+
+function updateRoulementFormDisplay(){
+  const displayEl = document.querySelector('#roulementCycleDisplay');
+  const lenEl = document.querySelector('#roulementCycleLength');
+  if(!displayEl) return;
+  if(tempRoulementCycle.length===0){
+    displayEl.innerHTML = '<span class="text-[11px] text-white/30 mono">Aucun jour - clique sur les horaires ci-dessous</span>';
+  }else{
+    let h='';
+    tempRoulementCycle.forEach(id=>{
+      const p=data.postes.find(x=>x.id===id);
+      const col = p ? p.couleur : 'bg-white/10 border-white/20';
+      h+=`<span class="px-2 py-1 rounded-full text-xs font-bold mono border ${col}">${id}</span>`;
+    });
+    displayEl.innerHTML = h;
+  }
+  if(lenEl) lenEl.textContent = tempRoulementCycle.length + ' jours';
+  // boutons postes
+  const btnsEl = document.querySelector('#roulementCycleButtons');
+  if(btnsEl){
+    let b='';
+    data.postes.forEach(p=>{
+      b+=`<button class="addRoulementCycle px-3 py-1.5 rounded-full bg-white/10 text-xs mono font-bold border ${p.couleur} hover:bg-white/20" data-id="${p.id}">${p.id} ${p.nom.slice(0,8)}</button>`;
+    });
+    btnsEl.innerHTML = b || '<span class="text-[10px] text-white/30">Crée d\'abord des horaires</span>';
+    btnsEl.querySelectorAll('.addRoulementCycle').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        tempRoulementCycle.push(btn.dataset.id);
+        updateRoulementFormDisplay();
+      });
+    });
+  }
+}
+
+function openRoulementForm(editId=null){
+  const form = document.querySelector('#roulementForm');
+  if(!form) return;
+  form.classList.remove('hidden');
+  const titleEl = document.querySelector('#roulementFormTitle');
+  const nomEl = document.querySelector('#roulementNom');
+  const debutEl = document.querySelector('#roulementDebut');
+  const finEl = document.querySelector('#roulementFin');
+  const editIdEl = document.querySelector('#roulementEditId');
+  if(editId){
+    const r = data.roulements.find(x=>x.id===editId);
+    if(!r) return;
+    if(titleEl) titleEl.textContent = 'MODIFIER PÉRIODE';
+    if(nomEl) nomEl.value = r.nom;
+    if(debutEl) debutEl.value = r.debut;
+    if(finEl) finEl.value = r.fin || '';
+    tempRoulementCycle = [...(r.cycle||[])];
+    if(editIdEl) editIdEl.value = r.id;
+  }else{
+    if(titleEl) titleEl.textContent = 'NOUVELLE PÉRIODE';
+    if(nomEl) nomEl.value = '';
+    const todayIso = isoDate(new Date());
+    if(debutEl) debutEl.value = todayIso;
+    if(finEl) finEl.value = '';
+    tempRoulementCycle = [];
+    if(editIdEl) editIdEl.value = '';
+  }
+  updateRoulementFormDisplay();
+  form.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+function closeRoulementForm(){
+  const form = document.querySelector('#roulementForm');
+  if(form) form.classList.add('hidden');
+  tempRoulementCycle = [];
+  const editIdEl = document.querySelector('#roulementEditId');
+  if(editIdEl) editIdEl.value='';
 }
 function updateNewPostePreview(){
   const nomEl=document.querySelector('#newPosteNom');
@@ -1331,8 +1512,57 @@ updateNewPostePreview();
   if(el) el.addEventListener('change', updateNewPostePreview);
 });
 
-$('#cycleStart').addEventListener('change',e=>{ data.cycleStart=e.target.value; save(); });
-$('#clearCycle').addEventListener('click',()=>{ data.cycle=[]; save(); renderReglages(); });
+// Anciens listeners cycleStart/clearCycle supprimés - remplacés par gestion par périodes
+// Listeners pour roulements par périodes
+document.querySelector('#addRoulement')?.addEventListener('click',()=> openRoulementForm());
+document.querySelector('#cancelRoulement')?.addEventListener('click',()=> closeRoulementForm());
+document.querySelector('#roulementClearCycle')?.addEventListener('click',()=>{ tempRoulementCycle=[]; updateRoulementFormDisplay(); });
+document.querySelector('#saveRoulement')?.addEventListener('click',()=>{
+  const nomEl=document.querySelector('#roulementNom');
+  const debutEl=document.querySelector('#roulementDebut');
+  const finEl=document.querySelector('#roulementFin');
+  const editIdEl=document.querySelector('#roulementEditId');
+  const nom = nomEl ? nomEl.value.trim() || 'Roulement' : 'Roulement';
+  const debut = debutEl ? debutEl.value : '';
+  const fin = finEl && finEl.value ? finEl.value : null;
+  const cycleStart = debut; // début cycle = début période automatiquement
+  const editId = editIdEl ? editIdEl.value : '';
+  if(!debut){ alert('Choisis une date de début de période'); return; }
+  if(tempRoulementCycle.length===0){ alert('Ajoute au moins un jour dans le cycle'); return; }
+  if(fin && fin < debut){ alert('La fin ne peut pas être avant le début'); return; }
+
+  if(editId){
+    const idx=data.roulements.findIndex(r=>r.id===editId);
+    if(idx!==-1){
+      data.roulements[idx].nom=nom;
+      data.roulements[idx].debut=debut;
+      data.roulements[idx].fin=fin;
+      data.roulements[idx].cycle=[...tempRoulementCycle];
+      data.roulements[idx].cycleStart=cycleStart;
+    }
+  }else{
+    data.roulements.push({
+      id:'r_'+Date.now()+'_'+Math.random().toString(36).slice(2,6),
+      nom, debut, fin, cycle:[...tempRoulementCycle], cycleStart
+    });
+  }
+  // tri par début
+  data.roulements.sort((a,b)=> a.debut.localeCompare(b.debut));
+  // garde compat ancien système sur dernier roulement
+  if(data.roulements.length){
+    const last=[...data.roulements].sort((a,b)=> b.debut.localeCompare(a.debut))[0];
+    data.cycle=[...last.cycle];
+    data.cycleStart=last.debut;
+  }
+  save();
+  closeRoulementForm();
+  renderReglages();
+  renderPlanning();
+  renderBanque();
+  console.log('Période enregistrée', data.roulements);
+});
+
+
 
 // Planning
 let viewMode='mois';
@@ -1445,22 +1675,65 @@ if(modalIso) delete data.absences[modalIso];
 save(); renderPlanning(); $('#dayModal').classList.add('hidden');
 });
 
-// Banque HS
-$('#modeMensuel').addEventListener('click',()=>{
-data.modeBanque='mensuel'; $('#banqueMensuel').classList.remove('hidden'); $('#banqueAnnuel').classList.add('hidden');
-$('#modeMensuel').className='px-4 py-1.5 rounded-full text-xs font-bold bg-white text-black';
-$('#modeAnnuel').className='px-4 py-1.5 rounded-full text-xs font-bold';
-save(); renderBanque();
+// Banque HS - PÉRIODE PERSONNALISABLE (remplace onglets)
+function setPeriodePreset(preset){
+  const now = new Date();
+  let debut, fin;
+  if(preset==='thisMonth'){
+    debut = new Date(now.getFullYear(), now.getMonth(), 1);
+    fin = new Date(now.getFullYear(), now.getMonth()+1, 0);
+  } else if(preset==='lastMonth'){
+    debut = new Date(now.getFullYear(), now.getMonth()-1, 1);
+    fin = new Date(now.getFullYear(), now.getMonth(), 0);
+  } else if(preset==='last3Months'){
+    debut = new Date(now.getFullYear(), now.getMonth()-2, 1);
+    fin = new Date(now.getFullYear(), now.getMonth()+1, 0);
+  } else if(preset==='thisYear'){
+    debut = new Date(now.getFullYear(), 0, 1);
+    fin = new Date(now.getFullYear(), 11, 31);
+  } else if(preset==='lastYear'){
+    debut = new Date(now.getFullYear()-1, 0, 1);
+    fin = new Date(now.getFullYear()-1, 11, 31);
+  } else if(preset==='all'){
+    const keys = Object.keys(data.pointages).sort();
+    if(keys.length>0){
+      debut = new Date(keys[0]);
+    }else{
+      debut = new Date(now.getFullYear()-1, 0, 1);
+    }
+    fin = new Date(now.getFullYear(), 11, 31);
+  }
+  if(debut && fin){
+    data.periodeDebut = isoDate(debut);
+    data.periodeFin = isoDate(fin);
+    save();
+    renderBanque();
+  }
+}
+
+$('#periodeDebut').addEventListener('change',e=>{
+  if(!e.target.value) return;
+  data.periodeDebut = e.target.value;
+  if(new Date(data.periodeDebut) > new Date(data.periodeFin)){
+    data.periodeFin = data.periodeDebut;
+  }
+  save();
+  renderBanque();
 });
-$('#modeAnnuel').addEventListener('click',()=>{
-data.modeBanque='annuel'; $('#banqueAnnuel').classList.remove('hidden'); $('#banqueMensuel').classList.add('hidden');
-$('#modeAnnuel').className='px-4 py-1.5 rounded-full text-xs font-bold bg-white text-black';
-$('#modeMensuel').className='px-4 py-1.5 rounded-full text-xs font-bold';
-save(); renderBanque();
+$('#periodeFin').addEventListener('change',e=>{
+  if(!e.target.value) return;
+  data.periodeFin = e.target.value;
+  if(new Date(data.periodeFin) < new Date(data.periodeDebut)){
+    data.periodeDebut = data.periodeFin;
+  }
+  save();
+  renderBanque();
 });
-$('#periodeDebut').addEventListener('change',e=>{ data.periodeDebut=e.target.value; save(); });
-$('#periodeFin').addEventListener('change',e=>{ data.periodeFin=e.target.value; save(); });
-$('#applyPeriode').addEventListener('click',()=>renderBanque());
+$$('.presetPeriode').forEach(b=>b.addEventListener('click',()=>{
+  $$('.presetPeriode').forEach(x=>x.className='presetPeriode px-3 py-1.5 rounded-full bg-white/10 text-[10px] mono font-bold hover:bg-white/20 transition');
+  b.className='presetPeriode px-3 py-1.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 text-[10px] mono font-bold';
+  setPeriodePreset(b.dataset.preset);
+}));
 
 
 function calcGratuitDetail(iso, posteId, pointage){
@@ -1570,95 +1843,85 @@ return {supAcquises:supMaj, totalRecup, solde, details, totalTrav:totalTravEffec
 }
 
 function renderBanque(){
+  const pdEl=document.querySelector('#periodeDebut');
+  const pfEl=document.querySelector('#periodeFin');
+  if(pdEl) pdEl.value = data.periodeDebut;
+  if(pfEl) pfEl.value = data.periodeFin;
+  const labelEl=document.querySelector('#periodeLabel');
+  if(labelEl) labelEl.textContent = data.periodeDebut.split('-').reverse().join('/')+' - '+data.periodeFin.split('-').reverse().join('/');
 
-const mmBtn=document.querySelector('#modeMensuel'); const maBtn=document.querySelector('#modeAnnuel');
-if(data.modeBanque==='mensuel'){
-  if(mmBtn) mmBtn.className='px-4 py-1.5 rounded-full text-xs font-bold bg-white text-black';
-  if(maBtn) maBtn.className='px-4 py-1.5 rounded-full text-xs font-bold';
-}else{
-  if(maBtn) maBtn.className='px-4 py-1.5 rounded-full text-xs font-bold bg-white text-black';
-  if(mmBtn) mmBtn.className='px-4 py-1.5 rounded-full text-xs font-bold';
-}
-const pdEl=document.querySelector('#periodeDebut'); if(pdEl) pdEl.value=data.periodeDebut;
-$('#periodeFin').value=data.periodeFin;
-$('#periodeLabel').textContent=data.periodeDebut.split('-').reverse().join('/')+' - '+data.periodeFin.split('-').reverse().join('/');
-if(data.modeBanque==='mensuel'){
-const bmEl=document.querySelector('#banqueMensuel'); if(bmEl) bmEl.classList.remove('hidden');
-const baEl=document.querySelector('#banqueAnnuel'); if(baEl) baEl.classList.add('hidden');
-const nowBanque=new Date();
-const year=nowBanque.getFullYear(); const month=nowBanque.getMonth();
-const start=new Date(year,month,1); const end=new Date(year,month+1,0);
-const todayMid = new Date(nowBanque.getFullYear(), nowBanque.getMonth(), nowBanque.getDate());
-const endPast = end < todayMid ? end : todayMid;
-const resFull=calcBanqueForRange(start,end);
-const resPast=calcBanqueForRange(start,endPast);
-// Théorique total mois, théorique dû jusqu'à aujourd'hui, réalisé, solde actuel = réalisé - dû - recup
-const soldeActuel = resPast.supAcquises - resPast.totalRecup;
-const soldeEl=document.querySelector('#soldeMois'); if(soldeEl) soldeEl.textContent=(soldeActuel>=0?'+':'')+fmtMin(soldeActuel);
-const gratuitMoisEl=document.querySelector('#gratuitMois'); if(gratuitMoisEl) gratuitMoisEl.textContent=fmtMin(resPast.totalGratuit||0);
-const gAvantMoisEl=document.querySelector('#gratuitAvantMois'); if(gAvantMoisEl) gAvantMoisEl.textContent=fmtMin(resPast.totalGratuitAvant||0);
-const gApresMoisEl=document.querySelector('#gratuitApresMois'); if(gApresMoisEl) gApresMoisEl.textContent=fmtMin(resPast.totalGratuitApres||0);
-const gDetailMoisEl=document.querySelector('#gratuitDetailMois'); if(gDetailMoisEl) gDetailMoisEl.textContent=(resPast.totalGratuit? fmtMin(resPast.totalGratuit)+' offert ce mois' : 'Aucune');
-const theoEl=document.querySelector('#theoriqueMois'); if(theoEl) theoEl.textContent=fmtMin(resFull.totalObjAdj);
-const theoDuEl=document.querySelector('#theoriqueDuMois'); if(theoDuEl) theoDuEl.textContent=fmtMin(resPast.totalObjAdj);
-const realEl=document.querySelector('#realiseMois'); if(realEl) realEl.textContent=fmtMin(resPast.totalTrav);
-const moisNameEl=document.querySelector('#moisName'); if(moisNameEl) moisNameEl.textContent=nowBanque.toLocaleDateString('fr-FR',{month:'long',year:'numeric'});
-const hsDetailEl=document.querySelector('#hsDetailMois'); if(hsDetailEl) hsDetailEl.textContent=`Réalisé (${fmtMin(resPast.totalTrav)}) - Dû (${fmtMin(resPast.totalObjAdj)})`;
-// 12 months avec détail théorique / réalisé / HS actuel (avec futur supposé fait)
-let list='';
-for(let i=0;i<12;i++){
-const d=addDays(start,-i*30);
-const s=new Date(d.getFullYear(),d.getMonth(),1); const e=new Date(d.getFullYear(),d.getMonth()+1,0);
-const rFull=calcBanqueForRange(s,e);
-const todayM = new Date();
-const ePast = e < new Date(todayM.getFullYear(), todayM.getMonth(), todayM.getDate()) ? e : new Date(todayM.getFullYear(), todayM.getMonth(), todayM.getDate());
-const rPast = (s.getMonth()===todayM.getMonth() && s.getFullYear()===todayM.getFullYear()) ? calcBanqueForRange(s,ePast) : rFull;
-const soldeAct = (s.getMonth()===todayM.getMonth() && s.getFullYear()===todayM.getFullYear()) ? (rPast.supAcquises - rPast.totalRecup) : rFull.solde;
-list+=`<div class="flex justify-between py-1.5 border-b border-white/5 text-[11px]"><span class="w-20">${s.toLocaleDateString('fr-FR',{month:'long', year:'2-digit'})}</span><span class="text-white/50">${fmtMin(rFull.totalObjAdj)}</span><span class="text-white">${fmtMin(rFull.totalTrav)}</span><span class="${soldeAct>=0?'text-emerald-400':'text-red-400'} font-bold">${soldeAct>=0?'+':''}${fmtMin(soldeAct)}</span></div>`;
-}
-const listEl=document.querySelector('#listMois'); if(listEl) listEl.innerHTML='<div class="flex justify-between text-[9px] text-white/30 mb-1"><span class="w-20">Mois</span><span>Théo tot</span><span>Réel</span><span>HS actuel</span></div>'+list;
-}else{
-const baEl2=document.querySelector('#banqueAnnuel'); if(baEl2) baEl2.classList.remove('hidden');
-const bmEl2=document.querySelector('#banqueMensuel'); if(bmEl2) bmEl2.classList.add('hidden');
-const debutPer = new Date(data.periodeDebut); const finPer = new Date(data.periodeFin);
-const res=calcBanqueForRange(debutPer, finPer);
-const nowA = new Date(); const todayMidA = new Date(nowA.getFullYear(), nowA.getMonth(), nowA.getDate());
-const finPastA = finPer < todayMidA ? finPer : todayMidA;
-const debutPastA = debutPer > todayMidA ? debutPer : debutPer;
-const resPastA = (debutPer <= todayMidA) ? calcBanqueForRange(debutPer, finPastA) : {supAcquises:0,totalRecup:0,totalObjAdj:0,totalTrav:0,solde:0};
-const soldeActuelA = resPastA.supAcquises - resPastA.totalRecup;
-const supEl=document.querySelector('#supAcquises'); if(supEl) supEl.textContent=(resPastA.supAcquises>=0?'+':'')+fmtMin(resPastA.supAcquises);
-const gratuitAnnEl=document.querySelector('#gratuitAnnuel'); if(gratuitAnnEl) gratuitAnnEl.textContent=fmtMin(resPastA.totalGratuit||0);
-const gAvantAnnEl=document.querySelector('#gratuitAvantAnnuel'); if(gAvantAnnEl) gAvantAnnEl.textContent=fmtMin(resPastA.totalGratuitAvant||0);
-const gApresAnnEl=document.querySelector('#gratuitApresAnnuel'); if(gApresAnnEl) gApresAnnEl.textContent=fmtMin(resPastA.totalGratuitApres||0);
-const recupEl=document.querySelector('#recupPosees'); if(recupEl) recupEl.textContent='-'+fmtMin(resPastA.totalRecup);
-const soldeEl2=document.querySelector('#soldeAnnuel'); if(soldeEl2) soldeEl2.textContent=(soldeActuelA>=0?'+':'')+fmtMin(soldeActuelA);
-const soldeFinalEl=document.querySelector('#soldeFinal'); if(soldeFinalEl) soldeFinalEl.textContent=(soldeActuelA>=0?'+':'')+fmtMin(soldeActuelA);
-if(soldeEl2) soldeEl2.className='text-4xl font-extrabold mono '+(soldeActuelA>=0?'text-emerald-400':'text-red-400');
-const theoAnnEl=document.querySelector('#theoriqueAnnuel'); if(theoAnnEl) theoAnnEl.textContent=fmtMin(res.totalObjAdj);
-const realAnnEl=document.querySelector('#realiseAnnuel'); if(realAnnEl) realAnnEl.textContent=fmtMin(res.totalTrav);
-const theoAnnEl2=document.querySelector('#theoriqueAnnuel2'); if(theoAnnEl2) theoAnnEl2.textContent=fmtMin(res.totalObjAdj);
-const realAnnEl2=document.querySelector('#realiseAnnuel2'); if(realAnnEl2) realAnnEl2.textContent=fmtMin(res.totalTrav);
-const theoDuAnnEl=document.querySelector('#theoriqueDuAnnuel'); if(theoDuAnnEl) theoDuAnnEl.textContent=fmtMin(resPastA.totalObjAdj);
-const realDuAnnEl=document.querySelector('#realiseDuAnnuel'); if(realDuAnnEl) realDuAnnEl.textContent=fmtMin(resPastA.totalTrav);
+  const debutPer = new Date(data.periodeDebut);
+  const finPer = new Date(data.periodeFin);
+  if(isNaN(debutPer) || isNaN(finPer)) return;
 
-// bar chart monthly
-let bars=''; let labels='';
-for(let m=0;m<12;m++){
-const s=new Date(new Date(data.periodeDebut).getFullYear(),m,1); const e=new Date(s.getFullYear(),m+1,0);
-if(s>new Date(data.periodeFin) || e<new Date(data.periodeDebut)) continue;
-const r=calcBanqueForRange(s,e);
-const h=Math.min(80, Math.abs(r.solde)/2);
-bars+=`<div class="flex-1 flex flex-col items-center"><div class="w-full ${r.solde>=0?'bg-emerald-500':'bg-red-500'} rounded-t" style="height:${h}px"></div></div>`;
-labels+=`<div class="flex-1 text-center">${s.toLocaleDateString('fr-FR',{month:'short'})}</div>`;
-}
-$('#barChart').innerHTML=bars; $('#barLabels').innerHTML=labels;
-let tbody='';
-res.details.slice(-50).reverse().forEach(d=>{
-tbody+=`<tr class="border-b border-white/5"><td class="py-1">${d.date}</td><td>${d.type}</td><td class="${d.sup>=0?'text-emerald-400':'text-red-400'}">${d.sup?fmtMin(d.sup):'-'}</td><td class="text-violet-400">${d.recup?fmtMin(d.recup):'-'}</td><td class="text-amber-300">${d.gratuit?fmtMin(d.gratuit):'-'}</td><td class="font-bold">${fmtMin(d.cum)}</td></tr>`;
-});
-$('#tableBanque').innerHTML=tbody;
-}
+  let start = debutPer <= finPer ? debutPer : finPer;
+  let end = debutPer <= finPer ? finPer : debutPer;
+
+  const res=calcBanqueForRange(start, end);
+  const nowA = new Date(); 
+  const todayMidA = new Date(nowA.getFullYear(), nowA.getMonth(), nowA.getDate());
+  const finPastA = end < todayMidA ? end : todayMidA;
+  const resPastA = (start <= todayMidA) ? calcBanqueForRange(start, finPastA) : {supAcquises:0,totalRecup:0,totalObjAdj:0,totalTrav:0,solde:0,totalGratuit:0,totalGratuitAvant:0,totalGratuitApres:0,totalTravEffectif:0,details:[],totalObjContract:0};
+
+  const soldeActuelA = resPastA.supAcquises - resPastA.totalRecup;
+
+  const supEl=document.querySelector('#supAcquises'); if(supEl) supEl.textContent=(resPastA.supAcquises>=0?'+':'')+fmtMin(resPastA.supAcquises);
+  const gratuitAnnEl=document.querySelector('#gratuitAnnuel'); if(gratuitAnnEl) gratuitAnnEl.textContent=fmtMin(resPastA.totalGratuit||0);
+  const gAvantAnnEl=document.querySelector('#gratuitAvantAnnuel'); if(gAvantAnnEl) gAvantAnnEl.textContent=fmtMin(resPastA.totalGratuitAvant||0);
+  const gApresAnnEl=document.querySelector('#gratuitApresAnnuel'); if(gApresAnnEl) gApresAnnEl.textContent=fmtMin(resPastA.totalGratuitApres||0);
+  const recupEl=document.querySelector('#recupPosees'); if(recupEl) recupEl.textContent='-'+fmtMin(resPastA.totalRecup);
+  const soldeEl2=document.querySelector('#soldeAnnuel'); if(soldeEl2){ soldeEl2.textContent=(soldeActuelA>=0?'+':'')+fmtMin(soldeActuelA); soldeEl2.className='text-4xl font-extrabold mono mt-1 '+(soldeActuelA>=0?'text-emerald-400':'text-red-400'); }
+  const soldeFinalEl=document.querySelector('#soldeFinal'); if(soldeFinalEl){ soldeFinalEl.textContent=(soldeActuelA>=0?'+':'')+fmtMin(soldeActuelA); soldeFinalEl.className='font-bold mono '+(soldeActuelA>=0?'text-emerald-400':'text-red-400'); }
+
+  const theoAnnEl=document.querySelector('#theoriqueAnnuel'); if(theoAnnEl) theoAnnEl.textContent=fmtMin(res.totalObjAdj);
+  const realAnnEl=document.querySelector('#realiseAnnuel'); if(realAnnEl) realAnnEl.textContent=fmtMin(res.totalTrav);
+  const theoAnnEl2=document.querySelector('#theoriqueAnnuel2'); if(theoAnnEl2) theoAnnEl2.textContent=fmtMin(res.totalObjAdj);
+  const realAnnEl2=document.querySelector('#realiseAnnuel2'); if(realAnnEl2) realAnnEl2.textContent=fmtMin(res.totalTrav);
+  const theoDuAnnEl=document.querySelector('#theoriqueDuAnnuel'); if(theoDuAnnEl) theoDuAnnEl.textContent=fmtMin(resPastA.totalObjAdj);
+  const realDuAnnEl=document.querySelector('#realiseDuAnnuel'); if(realDuAnnEl) realDuAnnEl.textContent=fmtMin(resPastA.totalTrav);
+
+  const nbJoursEl=document.querySelector('#nbJoursPeriode');
+  if(nbJoursEl){
+    const diffDays = Math.round((end - start)/(1000*60*60*24))+1;
+    nbJoursEl.textContent = diffDays + ' jours';
+  }
+  const nbPointagesEl=document.querySelector('#nbPointagesPeriode');
+  if(nbPointagesEl){
+    nbPointagesEl.textContent = res.details.length + ' pointages';
+  }
+
+  let bars=''; let labels='';
+  let cur = new Date(start.getFullYear(), start.getMonth(), 1);
+  const endMonth = new Date(end.getFullYear(), end.getMonth(), 1);
+  let monthCount=0;
+  while(cur <= endMonth && monthCount<24){
+    const s=new Date(cur.getFullYear(),cur.getMonth(),1);
+    const e=new Date(cur.getFullYear(),cur.getMonth()+1,0);
+    const rStart = s>start?s:start;
+    const rEnd = e<end?e:end;
+    const r=calcBanqueForRange(rStart, rEnd);
+    const h=Math.min(80, Math.max(4, Math.abs(r.solde)/2 + 4));
+    const color = r.solde>=0 ? 'bg-emerald-500' : 'bg-red-500';
+    bars+=`<div class="flex-1 flex flex-col items-center justify-end"><div class="w-full ${color} rounded-t transition-all" style="height:${h}px" title="${s.toLocaleDateString('fr-FR',{month:'long', year:'numeric'})}: ${r.solde>=0?'+':''}${fmtMin(r.solde)}"></div></div>`;
+    labels+=`<div class="flex-1 text-center truncate">${s.toLocaleDateString('fr-FR',{month:'short'})}</div>`;
+    cur = new Date(cur.getFullYear(), cur.getMonth()+1, 1);
+    monthCount++;
+  }
+  const barChartEl=document.querySelector('#barChart');
+  if(barChartEl) barChartEl.innerHTML=bars||'<div class="text-[9px] text-white/30">Pas de données</div>';
+  const barLabelsEl=document.querySelector('#barLabels');
+  if(barLabelsEl) barLabelsEl.innerHTML=labels;
+
+  let tbody='';
+  if(res.details.length===0){
+    tbody=`<tr><td colspan="6" class="py-4 text-center text-white/30 text-[10px]">Aucune donnée sur cette période</td></tr>`;
+  }else{
+    res.details.slice(-50).reverse().forEach(d=>{
+      tbody+=`<tr class="border-b border-white/5 hover:bg-white/5"><td class="py-1.5">${d.date.split('-').reverse().slice(0,2).join('/')}</td><td class="text-white/60">${d.type}</td><td class="${d.sup>=0?'text-emerald-400':'text-red-400'}">${d.sup?fmtMin(d.sup):'-'}</td><td class="text-violet-400">${d.recup?fmtMin(d.recup):'-'}</td><td class="text-amber-300">${d.gratuit?fmtMin(d.gratuit):'-'}</td><td class="font-bold text-right">${fmtMin(d.cum)}</td></tr>`;
+    });
+  }
+  const tableEl=document.querySelector('#tableBanque');
+  if(tableEl) tableEl.innerHTML=tbody;
 }
 
 // Historique avec suppression 1 par 1 + tout effacer
